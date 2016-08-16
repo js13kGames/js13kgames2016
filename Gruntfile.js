@@ -27,6 +27,15 @@ module.exports = function(grunt) {
           'build/css/output.css': 'build/css/output.css'
         }
       }
+    },
+    watch: {
+      styles: {
+        files: ['**/*.less'],
+        tasks: ['less'],
+        options: {
+          nospawn: true
+        }
+      }
     }
   });
 
@@ -34,9 +43,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
-  grunt.registerTask('default', ['less:development']);
+  grunt.registerTask('default', ['less:development', 'watch']);
   grunt.registerTask('production', ['uglify', 'less:production', 'cssmin']);
 
 };
