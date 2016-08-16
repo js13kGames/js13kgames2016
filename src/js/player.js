@@ -6,21 +6,30 @@ var GRAVITY = 19.8;
 var SIZE = 30;
 
 function Player() {
-	this.position = new Vector2(100, 100);
-	this.velocity = new Vector2(0, 0);
+	this.reset();
 
-	this.direction = 0;
-	this.isOnFloor = false;
-
-	document.onkeydown = this.onKeyDown.bind(this);
-	document.onkeyup = this.onKeyUp.bind(this);
-
+	Events.on('arrowKeyDown', this.onKeyDown, this);
+	Events.on('arrowKeyUp', this.onKeyUp, this);
 	Events.on('update', this.update, this);
 	Events.on('draw', this.draw, this);
+	Events.on('levelStarted', this.onLevelStarted, this);
 }
 
 Player.prototype = {
+	onLevelStarted: function(level) {
+		this.reset();
+		this.position = level.startPosition.copy();
+		this.levelStarted = true;
+	},
+	reset: function() {
+		this.levelStarted = false;
+		this.velocity = new Vector2(0, 0);
+
+		this.direction = 0;
+		this.isOnFloor = false;
+	},
 	onKeyDown: function(e) {
+		if (!this.levelStarted) return;
 		switch (e.keyCode) {
 			case 37: //left
 				this.direction = -1;
@@ -39,6 +48,7 @@ Player.prototype = {
 		}
 	},
 	onKeyUp: function(e) {
+		if (!this.levelStarted) return;
 		switch (e.keyCode) {
 			case 37:
 			case 39:
@@ -47,6 +57,7 @@ Player.prototype = {
 		}
 	},
 	update: function(dt) {
+		if (!this.levelStarted) return;
 		if (this.direction > 0) {
 			this.velocity.x += SPEED;
 			this.velocity.x = Math.min(this.velocity.x, MAX_SPEED)
@@ -68,6 +79,7 @@ Player.prototype = {
 		}
 	},
 	draw: function() {
+		if (!this.levelStarted) return;
 		ctx.fillStyle = "white";
 		ctx.fillRect(this.position.x - SIZE/2, this.position.y - SIZE, SIZE, SIZE);
 	}

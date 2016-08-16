@@ -13,5 +13,8 @@ Vector2.prototype = {
 	},
 	toString: function() {
 		return "[x: " + Math.round(this.x) + ", y: " + Math.round(this.y) + "]";
+	},
+	copy: function() {
+		return new Vector2(this.x, this.y);
 	}
 }

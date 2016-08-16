@@ -24,10 +24,16 @@
 }());
 
 (function Game() {
+	var level = new Level(new Vector2(100, 100), new Vector2(canvas.width - 100, canvas.height - 100));
 	var player = new Player();
+
 	var previousFrameTime = new Date();
 
 	window.requestAnimationFrame(update);
+
+	Events.on("startLevel", function() {
+		Events.emit("levelStarted", level);
+	});
 
 	function update(time) {
 		Events.emit('update', (new Date() - previousFrameTime) / 1000);
