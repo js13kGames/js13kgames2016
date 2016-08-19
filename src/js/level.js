@@ -1,18 +1,30 @@
-function Level(startPosition, endPosition) {
-	this.startPosition = startPosition;
-	this.endPosition = endPosition;
-	console.log("endPosition: " + endPosition);
-	this.SIZE = 50;
-
-	Events.on("draw", this.draw, this);
+var colliderTypes = ["none", "spawnPoint", "exit", "floor", "antifloor", "blocker"];
+function Level(data) {
+	var size = 50;
+	this.generate(data);
 }
 
 Level.prototype = {
-	draw: function() {
-		ctx.fillStyle = "green";
-		ctx.fillRect(this.startPosition.x - SIZE/2, this.startPosition.y - SIZE/2, SIZE, SIZE);
+	generate: function(data) {
+		for (var r = 0; r < data.length; r++) {
+			var row = data[r];
+			for (var c = 0; c < row.length; c++) {
+				var columnValue = row[c];
 
-		ctx.fillStyle = "red";
-		ctx.fillRect(this.endPosition.x - SIZE/2, this.endPosition.y - SIZE/2, SIZE, SIZE);
+				if (columnValue == 0) continue;
+				var width = canvas.width / row.length;
+				var height = canvas.height / data.length;
+				var x = width * c;
+				var y = height * r;
+
+				var collider = new LevelCollider(new Vector2(x, y), width, height, colliderTypes[columnValue]);
+				
+				if (columnValue == 1) {
+					this.spawnPoint = collider;
+				} else if (columnValue == 2) {
+					this.exit = collider;
+				}
+			}
+		}
 	}
 }

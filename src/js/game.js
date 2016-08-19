@@ -24,7 +24,9 @@
 }());
 
 (function Game() {
-	var level = new Level(new Vector2(100, 100), new Vector2(canvas.width - 100, canvas.height - 100));
+	window.glitchMode = false;
+	var collisionHandler = new CollisionHandler();
+	var level = new Level(LevelData["1"]);
 	var player = new Player();
 
 	var previousFrameTime = new Date();
@@ -34,6 +36,18 @@
 	Events.on("startLevel", function() {
 		Events.emit("levelStarted", level);
 	});
+
+	Events.on("exitReached", function() {
+		Events.emit("levelStarted", level);
+	})
+
+	Events.on("arrowKeyDown", function(e) {
+		if (e.keyCode == 37) {
+			window.glitchMode = true;
+		} else if (e.keyCode == 39) {
+			window.glitchMode = false;
+		}
+	})
 
 	function update(time) {
 		Events.emit('update', (new Date() - previousFrameTime) / 1000);
@@ -45,6 +59,8 @@
 
 	function draw() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle = window.glitchMode ? "#f0f0f0" : "#111";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		Events.emit('draw');
 	}
 
