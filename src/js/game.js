@@ -24,7 +24,6 @@
 })();
 
 window.NewGame = function() {
-	var collisionHandler = new CollisionHandler();
 	var levelIndex = 0;
 	var levelContainer = new LevelContainerController();
 	var player = new PlayerController();

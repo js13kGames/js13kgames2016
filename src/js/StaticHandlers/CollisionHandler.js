@@ -1,11 +1,10 @@
-function CollisionHandler() {
-	GameEvents.on("registerCollider", this.onRegisterCollider, this);
-	GameEvents.on("deregisterCollider", this.onDeregisterCollider, this);
-	GameEvents.on("detectCollisionAtPoint", this.getCollision, this);
-	this.collisionLayers = {};
-}
-
-CollisionHandler.prototype = {
+var CollisionHandler = {
+	init: function() {
+		GameEvents.on("registerCollider", this.onRegisterCollider, this);
+		GameEvents.on("deregisterCollider", this.onDeregisterCollider, this);
+		GameEvents.on("detectCollisionAtPoint", this.getCollision, this);
+		this.collisionLayers = {};
+	},
 	onRegisterCollider: function(collider, layer) {
 		if (!collider.getBounds) {
 			throw new Error("Error: Can't register a collider that has no getBounds function.");

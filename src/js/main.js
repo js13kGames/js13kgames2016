@@ -1,4 +1,4 @@
-(function setupGame() {
+window.SetupGame = function() {
 	window.canvas = document.querySelector('#gameCanvas');
 	window.ctx = canvas.getContext('2d');
 
@@ -22,4 +22,9 @@
 
 	window.addEventListener('load', resize, false);
 	window.addEventListener('resize', resize, false);
-})()
+
+	CollisionHandler.init();
+	InputHandler.init();
+
+	NewGame();
+}

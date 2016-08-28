@@ -1,8 +1,9 @@
-(function handleKeys() {
-	document.onkeydown = OnKeyDown;
-	document.onkeyup = OnKeyUp;
-
-	function OnKeyDown(e) {
+var InputHandler = {
+	init: function() {
+		document.onkeydown = this.OnKeyDown;
+		document.onkeyup = this.OnKeyUp;
+	},
+	OnKeyDown: function(e) {
 		switch (e.keyCode) {
 			case 37:
 			case 38:
@@ -11,8 +12,8 @@
 				GameEvents.emit("arrowKeyDown", e);
 			break;
 		}
-	}
-	function OnKeyUp(e) {
+	},
+	OnKeyUp: function(e) {
 		switch (e.keyCode) {
 			case 37:
 			case 38:
@@ -22,4 +23,4 @@
 			break;
 		}
 	}
-})()
+};
