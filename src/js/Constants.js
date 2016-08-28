@@ -1,0 +1,4 @@
+var SPEED = 100;
+var MAX_SPEED = 1000;
+var FRICTION = 0.8;
+var GRAVITY = 19.8;

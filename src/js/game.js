@@ -24,12 +24,10 @@
 }());
 
 (function Game() {
-	window.glitchMode = false;
-
 	var collisionHandler = new CollisionHandler();
 	var levelIndex = 0;
 	var levelDisplay = new LevelDisplay();
-	var player = new Player();
+	var player = new PlayerController();
 
 	nextLevel();
 
@@ -47,6 +45,7 @@
 	})
 
 	function nextLevel() {
+		window.glitchMode = false;
 		levelDisplay.generateLevel(LevelData[levelIndex]);
 		levelIndex = (levelIndex + 1) % LevelData.length;
 	}
