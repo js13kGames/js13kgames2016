@@ -2,7 +2,8 @@ var CollisionHandler = {
 	init: function() {
 		GameEvents.on("registerCollider", this.onRegisterCollider, this);
 		GameEvents.on("deregisterCollider", this.onDeregisterCollider, this);
-		GameEvents.on("detectCollisionAtPoint", this.getCollision, this);
+		GameEvents.on("detectCollision", this.getCollision, this);
+		GameEvents.on("detectCollisionAtPoint", this.getCollisionAtPoint, this);
 		this.collisionLayers = {};
 	},
 	onRegisterCollider: function(collider, layer) {
@@ -25,7 +26,21 @@ var CollisionHandler = {
 			}
 		}
 	},
-	getCollision(collider, point, layer) {
+	getCollision(collider, layer) {
+		var collisionLayer = this.collisionLayers[layer];
+		var colliderBounds = collider.getBounds();
+		for (var i = 0; i < collisionLayer.length; i++) {
+			var currentCollidee = collisionLayer[i];
+			if (currentCollidee == collider) continue;
+			var collideeBounds = currentCollidee.getBounds();
+			var isInsideVertically = colliderBounds.bottom > collideeBounds.top && colliderBounds.top < collideeBounds.bottom;
+			var isInsideHorizontally = colliderBounds.right > collideeBounds.left && colliderBounds.left < collideeBounds.right;
+			if (isInsideHorizontally && isInsideVertically) {
+				GameEvents.emit('collision', collider, currentCollidee);
+			}
+		}
+	},
+	getCollisionAtPoint(collider, point, layer) {
 		var collisionLayer = this.collisionLayers[layer];
 		for (var i = 0; i < collisionLayer.length; i++) {
 			var currentCollidee = collisionLayer[i];
