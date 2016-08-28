@@ -5,10 +5,10 @@ function LevelCollider(position, width, height, type) {
 	this.type = type;
 	Events.emit('registerCollider', this, 'level');
 	this.bounds = {
-		top: this.position.y - this.height / 2,
-		right: this.position.x + this.width / 2,
-		bottom: this.position.y + this.height / 2,
-		left: this.position.x - this.width / 2
+		top: this.position.y,
+		right: this.position.x + this.width,
+		bottom: this.position.y + this.height,
+		left: this.position.x
 	};
 	Events.on("draw", this.draw, this);
 }

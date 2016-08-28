@@ -24,6 +24,7 @@ Player.prototype = {
 	onLevelStarted: function(level) {
 		this.reset();
 		this.position = level.spawnPoint.position.copy();
+		this.position.add(new Vector2(level.spawnPoint.width/2, level.spawnPoint.height/2));
 		this.levelStarted = true;
 	},
 	reset: function() {
