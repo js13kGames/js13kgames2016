@@ -14,7 +14,7 @@ function Player() {
 	Events.on('arrowKeyUp', this.onKeyUp, this);
 	Events.on('update', this.update, this);
 	Events.on('draw', this.draw, this);
-	Events.on('levelStarted', this.onLevelStarted, this);
+	Events.on('startLevel', this.onLevelStarted, this);
 	Events.on('collision', this.onCollision, this);
 
 	Events.emit('registerCollider', this, 'level');

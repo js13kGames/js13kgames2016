@@ -10,9 +10,6 @@
 			case 40:
 				Events.emit("arrowKeyDown", e);
 			break;
-			case 13:
-				Events.emit('startLevel');
-			break;
 		}
 	}
 	function OnKeyUp(e) {

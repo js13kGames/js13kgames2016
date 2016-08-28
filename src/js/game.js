@@ -25,20 +25,17 @@
 
 (function Game() {
 	window.glitchMode = false;
+
 	var collisionHandler = new CollisionHandler();
-	var level = new Level(LevelData["1"]);
+	var levelIndex = 0;
+	var levelDisplay = new LevelDisplay();
 	var player = new Player();
 
-	var previousFrameTime = new Date();
-
-	window.requestAnimationFrame(update);
-
-	Events.on("startLevel", function() {
-		Events.emit("levelStarted", level);
-	});
+	nextLevel();
 
 	Events.on("exitReached", function() {
-		Events.emit("levelStarted", level);
+		levelDisplay.destroyLevel();
+		nextLevel();
 	})
 
 	Events.on("arrowKeyDown", function(e) {
@@ -49,6 +46,13 @@
 		}
 	})
 
+	function nextLevel() {
+		levelDisplay.generateLevel(LevelData[levelIndex]);
+		levelIndex = (levelIndex + 1) % LevelData.length;
+	}
+
+	var previousFrameTime = new Date();
+	window.requestAnimationFrame(update);
 	function update(time) {
 		Events.emit('update', (new Date() - previousFrameTime) / 1000);
 		previousFrameTime = new Date();

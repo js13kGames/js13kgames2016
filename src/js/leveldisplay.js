@@ -1,11 +1,10 @@
 var colliderTypes = ["none", "spawnPoint", "exit", "floor", "antifloor", "blocker"];
-function Level(data) {
-	var size = 50;
-	this.generate(data);
+function LevelDisplay(data) {
+	this.colliders = [];
 }
 
-Level.prototype = {
-	generate: function(data) {
+LevelDisplay.prototype = {
+	generateLevel: function(data) {
 		for (var r = 0; r < data.length; r++) {
 			var row = data[r];
 			for (var c = 0; c < row.length; c++) {
@@ -24,7 +23,15 @@ Level.prototype = {
 				} else if (columnValue == 2) {
 					this.exit = collider;
 				}
+				this.colliders.push(collider);
 			}
 		}
+		Events.emit("startLevel", this);
+	},
+	destroyLevel: function() {
+		for (var i = 0; i < this.colliders.length; i++) {
+			this.colliders[i].destroy();
+		}
+		this.colliders = [];
 	}
 }

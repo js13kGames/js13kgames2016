@@ -36,5 +36,9 @@ LevelCollider.prototype = {
 			break;
 		}
 		ctx.fillRect(this.bounds.left, this.bounds.top, this.width, this.height);
+	},
+	destroy: function() {
+		Events.off("draw", this.draw, this);
+		Events.emit("deregisterCollider", this, "level");
 	}
 }
