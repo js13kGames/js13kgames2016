@@ -7,7 +7,6 @@ body {
   position: relative;
 }
 #gameCanvas {
-  border: solid blue 3px;
   display: block;
   margin: auto;
 }

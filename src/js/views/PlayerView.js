@@ -6,7 +6,7 @@ function PlayerView(model) {
 PlayerView.prototype = {
 	draw: function() {
 		if (!this.model.levelStarted) return;
-		ctx.fillStyle = "pink";
+		ctx.fillStyle = "rgb(255, 235, 59)";
 		ctx.fillRect(this.model.position.x - this.model.size/2, this.model.position.y - this.model.size, this.model.size, this.model.size);
 	}
 }

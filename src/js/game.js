@@ -63,8 +63,6 @@ window.NewGame = function() {
 
 	function draw() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.fillStyle = window.glitchMode ? "#f0f0f0" : "#111";
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		GameEvents.emit('draw');
 	}
 
