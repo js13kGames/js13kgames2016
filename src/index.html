@@ -33,21 +33,13 @@
             ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
         </script>
         <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+        <script src="lib/minivents.js"></script>
         <script>
-            window.Events = new Events();
+            window.GameEvents = new Events();
         </script>
-        <script src="js/Constants.js"></script>
-        <script src="data/leveldata.js"></script>
-        <script src="js/inputhandler.js"></script>
-        <script src="js/collisionhandler.js"></script>
-        <script src="js/main.js"></script>
-        <script src="js/vector2.js"></script>
-        <!-- <script src="js/player.js"></script> -->
-        <script src="js/controllers/PlayerController.js"></script>
-        <script src="js/models/PlayerModel.js"></script>
-        <script src="js/views/PlayerView.js"></script>
-        <script src="js/levelcollider.js"></script>
-        <script src="js/leveldisplay.js"></script>
-        <script src="js/game.js"></script>
+        <script src="output.js"></script>
+        <script type="text/javascript">
+            NewGame();
+        </script>
     </body>
 </html>

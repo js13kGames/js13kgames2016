@@ -1,7 +1,7 @@
 function CollisionHandler() {
-	Events.on("registerCollider", this.onRegisterCollider, this);
-	Events.on("deregisterCollider", this.onDeregisterCollider, this);
-	Events.on("detectCollisionAtPoint", this.getCollision, this);
+	GameEvents.on("registerCollider", this.onRegisterCollider, this);
+	GameEvents.on("deregisterCollider", this.onDeregisterCollider, this);
+	GameEvents.on("detectCollisionAtPoint", this.getCollision, this);
 	this.collisionLayers = {};
 }
 
@@ -36,7 +36,7 @@ CollisionHandler.prototype = {
 			var isInsideVertically = point.y > collideeBounds.top && point.y < collideeBounds.bottom;
 			var isInsideHorizontally = point.x > collideeBounds.left && point.x < collideeBounds.right;
 			if (isInsideHorizontally && isInsideVertically) {
-				Events.emit('collision', collider, currentCollidee);
+				GameEvents.emit('collision', collider, currentCollidee);
 			}
 		}
 	}

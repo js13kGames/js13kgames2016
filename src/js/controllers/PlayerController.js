@@ -2,11 +2,11 @@ function PlayerController() {
 	this.model = new PlayerModel();
 	this.view = new PlayerView(this.model);
 
-	Events.on('arrowKeyDown', this.onKeyDown, this);
-	Events.on('arrowKeyUp', this.onKeyUp, this);
-	Events.on('update', this.update, this);
-	Events.on('startLevel', this.onLevelStarted, this);
-	Events.on('collision', this.onCollision, this);
+	GameEvents.on('arrowKeyDown', this.onKeyDown, this);
+	GameEvents.on('arrowKeyUp', this.onKeyUp, this);
+	GameEvents.on('update', this.update, this);
+	GameEvents.on('startLevel', this.onLevelStarted, this);
+	GameEvents.on('collision', this.onCollision, this);
 }
 
 PlayerController.prototype = {
@@ -50,7 +50,7 @@ PlayerController.prototype = {
 		console.log(collidee.type);
 		switch (collidee.type) {
 			case "exit":
-				Events.emit("exitReached");
+				GameEvents.emit("exitReached");
 			break;
 			case "floor":
 				if (window.glitchMode) return;
@@ -103,7 +103,7 @@ PlayerController.prototype = {
 
 		var nextPosition = this.model.position.copy();
 		nextPosition.add(this.model.velocity.scale(dt));
-		Events.emit("detectCollisionAtPoint", this, nextPosition, "level");
+		GameEvents.emit("detectCollisionAtPoint", this, nextPosition, "level");
 
 	}
 }

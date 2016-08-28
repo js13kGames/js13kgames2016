@@ -35,6 +35,19 @@ module.exports = function(grunt) {
         options: {
           nospawn: true
         }
+      },
+      code: {
+        files: ['src/**/*.js', '!src/output.js'],
+        tasks: ['concat']
+      }
+    },
+    concat: {
+      options: {
+        separator: ';\n',
+      },
+      code: {
+        src : 'src/**/*.js',
+        dest : 'src/output.js'
       }
     }
   });
@@ -44,9 +57,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
   // Default task(s).
-  grunt.registerTask('default', ['less:development', 'watch']);
+  grunt.registerTask('default', ['less:development', 'watch:code']);
   grunt.registerTask('production', ['uglify', 'less:production', 'cssmin']);
 
 };

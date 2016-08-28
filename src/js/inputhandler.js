@@ -1,4 +1,4 @@
-(function() {
+(function handleKeys() {
 	document.onkeydown = OnKeyDown;
 	document.onkeyup = OnKeyUp;
 
@@ -8,7 +8,7 @@
 			case 38:
 			case 39:
 			case 40:
-				Events.emit("arrowKeyDown", e);
+				GameEvents.emit("arrowKeyDown", e);
 			break;
 		}
 	}
@@ -18,8 +18,8 @@
 			case 38:
 			case 39:
 			case 40:
-				Events.emit("arrowKeyUp", e);
+				GameEvents.emit("arrowKeyUp", e);
 			break;
 		}
 	}
-})();
+})()

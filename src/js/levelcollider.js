@@ -3,14 +3,14 @@ function LevelCollider(position, width, height, type) {
 	this.width = width;
 	this.height = height;
 	this.type = type;
-	Events.emit('registerCollider', this, 'level');
+	GameEvents.emit('registerCollider', this, 'level');
 	this.bounds = {
 		top: this.position.y,
 		right: this.position.x + this.width,
 		bottom: this.position.y + this.height,
 		left: this.position.x
 	};
-	Events.on("draw", this.draw, this);
+	GameEvents.on("draw", this.draw, this);
 }
 
 LevelCollider.prototype = {
@@ -38,7 +38,7 @@ LevelCollider.prototype = {
 		ctx.fillRect(this.bounds.left, this.bounds.top, this.width, this.height);
 	},
 	destroy: function() {
-		Events.off("draw", this.draw, this);
-		Events.emit("deregisterCollider", this, "level");
+		GameEvents.off("draw", this.draw, this);
+		GameEvents.emit("deregisterCollider", this, "level");
 	}
 }

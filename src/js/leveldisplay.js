@@ -26,7 +26,7 @@ LevelDisplay.prototype = {
 				this.colliders.push(collider);
 			}
 		}
-		Events.emit("startLevel", this);
+		GameEvents.emit("startLevel", this);
 	},
 	destroyLevel: function() {
 		for (var i = 0; i < this.colliders.length; i++) {

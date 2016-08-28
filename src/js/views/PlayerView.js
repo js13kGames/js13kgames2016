@@ -1,6 +1,6 @@
 function PlayerView(model) {
 	this.model = model;
-	Events.on('draw', this.draw, this);
+	GameEvents.on('draw', this.draw, this);
 }
 
 PlayerView.prototype = {

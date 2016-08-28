@@ -1,4 +1,4 @@
-(function() {
+(function setupRequestAnimFrame() {
     var lastTime = 0;
     var vendors = ['webkit', 'moz'];
     for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
@@ -21,9 +21,9 @@
         window.cancelAnimationFrame = function(id) {
             clearTimeout(id);
         };
-}());
+})();
 
-(function Game() {
+window.NewGame = function() {
 	var collisionHandler = new CollisionHandler();
 	var levelIndex = 0;
 	var levelDisplay = new LevelDisplay();
@@ -31,12 +31,12 @@
 
 	nextLevel();
 
-	Events.on("exitReached", function() {
+	GameEvents.on("exitReached", function() {
 		levelDisplay.destroyLevel();
 		nextLevel();
 	})
 
-	Events.on("arrowKeyDown", function(e) {
+	GameEvents.on("arrowKeyDown", function(e) {
 		if (e.keyCode == 37) {
 			window.glitchMode = true;
 		} else if (e.keyCode == 39) {
@@ -53,7 +53,7 @@
 	var previousFrameTime = new Date();
 	window.requestAnimationFrame(update);
 	function update(time) {
-		Events.emit('update', (new Date() - previousFrameTime) / 1000);
+		GameEvents.emit('update', (new Date() - previousFrameTime) / 1000);
 		previousFrameTime = new Date();
 		draw();
 
@@ -64,7 +64,7 @@
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.fillStyle = window.glitchMode ? "#f0f0f0" : "#111";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		Events.emit('draw');
+		GameEvents.emit('draw');
 	}
 
-}());
+}
