@@ -2,7 +2,7 @@ window.SetupGame = function() {
 	window.canvas = document.querySelector('#gameCanvas');
 	window.ctx = canvas.getContext('2d');
 
-	var maxWidth = 800, maxHeight = 800;
+	var maxWidth = 840, maxHeight = 840;
 
 	function resize() {
 		var desiredRatio = canvas.width / canvas.height;
