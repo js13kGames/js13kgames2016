@@ -4,12 +4,11 @@ function LevelContainerModel() {
 
 LevelContainerModel.prototype = {
 	reset: function() {
-		this.levelObjects = {
-			spawnPoint: null,
-			exit: null,
-			floors: [],
-			antifloors: [],
-			blockers: []
-		};
+		this.spawnPoint = null,
+		this.exit = null;
+		this.floors = [];
+		this.antifloors = [];
+		this.blockers = [];
+		this.levelObjects = [];
 	}
 }

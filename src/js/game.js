@@ -26,13 +26,13 @@
 window.NewGame = function() {
 	var collisionHandler = new CollisionHandler();
 	var levelIndex = 0;
-	var levelDisplay = new LevelDisplay();
+	var levelContainer = new LevelContainerController();
 	var player = new PlayerController();
 
 	nextLevel();
 
 	GameEvents.on("exitReached", function() {
-		levelDisplay.destroyLevel();
+		levelContainer.destroyLevelData();
 		nextLevel();
 	})
 
@@ -46,7 +46,8 @@ window.NewGame = function() {
 
 	function nextLevel() {
 		window.glitchMode = false;
-		levelDisplay.generateLevel(LevelData[levelIndex]);
+		levelContainer.generateLevelData(LevelData[levelIndex]);
+		GameEvents.emit("startLevel", levelContainer.model);
 		levelIndex = (levelIndex + 1) % LevelData.length;
 	}
 
