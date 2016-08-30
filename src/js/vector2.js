@@ -41,5 +41,10 @@ Vector2.prototype = {
 		var dp = this.dotProduct(unit);
 		var projection = new Vector2(dp / unit.x, dp / unit.y);
 		return projection;
+	},
+	crossProduct: function(other) {
+		var dx = other.x - this.x;
+		var dy = other.y - this.y;
+		return new Vector2(-dy, dx);
 	}
 }
