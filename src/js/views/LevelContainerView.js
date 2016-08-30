@@ -50,7 +50,9 @@ LevelContainerView.prototype = {
 		ctx.fillStyle = colour;
 		ctx.fillRect(colliderModel.bounds.left, colliderModel.bounds.top, colliderModel.width, colliderModel.height);
 
-		ctx.fillStyle = "white";
-		ctx.fillText(colliderModel.index, colliderModel.bounds.left, colliderModel.bounds.top + 10);
+		if (window.drawDebug) {
+			ctx.fillStyle = "white";
+			ctx.fillText(colliderModel.index, colliderModel.bounds.left, colliderModel.bounds.top + 10);
+		}
 	}
 }

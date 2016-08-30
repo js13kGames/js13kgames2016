@@ -49,18 +49,9 @@ PlayerController.prototype = {
 				break;
 		}
 	},
-	onCollision: function(collider, collidee, collisionVector) {
+	onCollision: function(collider, collidee, intersectionVector) {
 		if (collider != this) return;
-		var normalisedCollisionVector = collisionVector.normalise();
-		var playerDirection = this.model.velocity.normalise();
-		if (playerDirection.x < 0) {
-			normalisedCollisionVector.x *= -1;
-		}
-		if (playerDirection.y < 0) {
-			normalisedCollisionVector.y *= -1;
-		}
-
-		var reflectedForce = this.model.velocity.scaleByVector(normalisedCollisionVector);
+		console.log(collidee.type);
 
 		switch (collidee.type) {
 			case "exit":
@@ -68,24 +59,20 @@ PlayerController.prototype = {
 			break;
 			/*case "floor":
 				if (window.glitchMode) return;
-				this.model.position.add(collisionVector);
+				this.model.position.add(intersectionVector);
 				this.model.velocity.add(reflectedForce);
 				this.model.isOnFloor = true;
 			break;
 			case "antifloor":
 				if (!window.glitchMode) return;
-				this.model.position.add(collisionVector);
+				this.model.position.add(intersectionVector);
 				this.model.velocity.add(reflectedForce);
 				this.model.isOnFloor = true;
 			break;*/
 			case "blocker":
-				if (normalisedCollisionVector.y == -1) {
-					this.model.isOnFloor = true;
-					this.model.jumpCount = 0;
-					console.log(this.model.isOnFloor);
-				}
-				this.model.position = this.model.position.add(collisionVector);
-				this.model.velocity = this.model.velocity.add(reflectedForce);
+				this.model.position = intersectionVector;
+				this.model.velocity.y = 0;
+				this.model.isOnFloor = true;
 		}
 	},
 	update: function(dt) {
@@ -103,13 +90,22 @@ PlayerController.prototype = {
 		this.model.velocity.x *= FRICTION;
 
 		if (!this.model.isOnFloor) {
-			this.model.velocity.y += GRAVITY;
+			this.model.velocity.y += GRAVITY * dt;
 		}
 
-		GameEvents.emit("detectCollision", this, "level");
+		var pointA = this.model.position,
+			pointB = this.model.position.add(this.model.velocity.scale(dt));
 
-		this.model.position = this.model.position.add(this.model.velocity.scale(dt));
-
+		GameEvents.emit("detectCollision", this, "level", pointA, pointB,
+			function onResult(data) {
+				if (data) {
+					this.model.velocity.y = 0;
+					this.model.position = data.intersectionResult;
+				} else {
+					this.model.position = this.model.position.add(this.model.velocity.scale(dt));
+				}
+			}
+		);
 
 	}
 }

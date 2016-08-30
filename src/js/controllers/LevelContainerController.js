@@ -18,7 +18,7 @@ LevelContainerController.prototype = {
 				var y = height * r;
 				var type = this.colliderTypes[columnValue];
 				var collider = new LevelColliderModel(new Vector2(x, y), width, height, type, 10 * r + c);
-				
+
 				if (columnValue == 1) {
 					this.model.spawnPoint = collider;
 				} else if (columnValue == 2) {

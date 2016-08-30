@@ -26,33 +26,26 @@ var CollisionHandler = {
 			}
 		}
 	},
-	getCollision(collider, layer) {
+	getCollision(collider, layer, pointA, pointB, callback) {
 		var collisionLayer = this.collisionLayers[layer];
-		var AABB1 = collider.getAABB();
+
 		for (var i = 0; i < collisionLayer.length; i++) {
 			var currentCollidee = collisionLayer[i];
 			if (currentCollidee == collider) continue;
-			var AABB2 = currentCollidee.getAABB();
 
-			var overlapX = Math.abs(AABB1.centre.x - AABB2.centre.x) - AABB1.xw - AABB2.xw;
-			if (overlapX > 0) {
-				continue;
+			var intersectionCheck = currentCollidee.checkIntersection(pointA, pointB);
+			if (intersectionCheck.isIntersecting) {
+				callback.call(collider,
+					{
+						collidee: currentCollidee,
+						intersectionResult: intersectionCheck.intersection
+					}
+				);
+				return;
 			}
-			var overlapY = Math.abs(AABB1.centre.y - AABB2.centre.y) - AABB1.yw - AABB2.yw;
-			if (overlapY > 0) {
-				continue;
-			}
-
-			var projectionVector;
-			if (overlapX > overlapY) {
-				var projectionX = AABB1.centre.x > AABB2.centre.x ? -overlapX : overlapX;
-				projectionVector = new Vector2(projectionX, 0);
-			} else {
-				var projectionY = AABB1.centre.y > AABB2.centre.y ? -overlapY : overlapY;
-				projectionVector = new Vector2(0, projectionY);
-			}
-
-			GameEvents.emit('collision', collider, currentCollidee, projectionVector);
+			
 		}
+		callback.call(collider);
 	}
+
 }
