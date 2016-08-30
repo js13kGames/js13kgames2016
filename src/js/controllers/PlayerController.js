@@ -16,7 +16,7 @@ PlayerController.prototype = {
 	onLevelStarted: function(levelModel) {
 		this.model.reset();
 		this.model.position = levelModel.spawnPoint.position.copy();
-		this.model.position.add(new Vector2(levelModel.spawnPoint.width/2, levelModel.spawnPoint.height/2));
+		this.model.position = this.model.position.add(new Vector2(levelModel.spawnPoint.width/2, levelModel.spawnPoint.height/2));
 		this.model.levelStarted = true;
 	},
 	onKeyDown: function(e) {
@@ -84,8 +84,8 @@ PlayerController.prototype = {
 					this.model.jumpCount = 0;
 					console.log(this.model.isOnFloor);
 				}
-				this.model.position.add(collisionVector);
-				this.model.velocity.add(reflectedForce);
+				this.model.position = this.model.position.add(collisionVector);
+				this.model.velocity = this.model.velocity.add(reflectedForce);
 		}
 	},
 	update: function(dt) {
@@ -108,7 +108,7 @@ PlayerController.prototype = {
 
 		GameEvents.emit("detectCollision", this, "level");
 
-		this.model.position.add(this.model.velocity.scale(dt));
+		this.model.position = this.model.position.add(this.model.velocity.scale(dt));
 
 
 	}
