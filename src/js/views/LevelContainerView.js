@@ -22,28 +22,35 @@ LevelContainerView.prototype = {
 
 		var i = 0, colliderModel;
 
-		ctx.fillStyle = "rgb(52, 73, 94)";
+		var colour = "rgb(52, 73, 94)";
 		for (i = 0; i < this.model.blockers.length; i++) {
 			colliderModel = this.model.blockers[i];
-			ctx.fillRect(colliderModel.bounds.left, colliderModel.bounds.top, colliderModel.width, colliderModel.height);
+			this.drawCollider(colour, colliderModel);
 		}
-		ctx.fillStyle = "rgb(241, 196, 15)";
+		colour = "rgb(241, 196, 15)";
 		for (i = 0; i < this.model.floors.length; i++) {
 			colliderModel = this.model.floors[i];
-			ctx.fillRect(colliderModel.bounds.left, colliderModel.bounds.top, colliderModel.width, colliderModel.height);
+			this.drawCollider(colour, colliderModel);
 		}
-		ctx.fillStyle = "rgb(26, 188, 156)";
+		colour = "rgb(26, 188, 156)";
 		for (i = 0; i < this.model.antifloors.length; i++) {
 			colliderModel = this.model.antifloors[i];
-			ctx.fillRect(colliderModel.bounds.left, colliderModel.bounds.top, colliderModel.width, colliderModel.height);
+			this.drawCollider(colour, colliderModel);
 		}
 
-		ctx.fillStyle = "rgb(155, 89, 182)";
+		colour = "rgb(155, 89, 182)";
 		colliderModel = this.model.spawnPoint;
+		this.drawCollider(colour, colliderModel);
+
+		colour = "rgb(44, 62, 80)";
+		colliderModel = this.model.exit;
+		this.drawCollider(colour, colliderModel);
+	},
+	drawCollider: function(colour, colliderModel) {
+		ctx.fillStyle = colour;
 		ctx.fillRect(colliderModel.bounds.left, colliderModel.bounds.top, colliderModel.width, colliderModel.height);
 
-		ctx.fillStyle = "rgb(44, 62, 80)";
-		colliderModel = this.model.exit;
-		ctx.fillRect(colliderModel.bounds.left, colliderModel.bounds.top, colliderModel.width, colliderModel.height);
+		ctx.fillStyle = "white";
+		ctx.fillText(colliderModel.index, colliderModel.bounds.left, colliderModel.bounds.top + 10);
 	}
 }

@@ -7,8 +7,8 @@ var CollisionHandler = {
 		this.collisionLayers = {};
 	},
 	onRegisterCollider: function(collider, layer) {
-		if (!collider.getBounds) {
-			throw new Error("Error: Can't register a collider that has no getBounds function.");
+		if (!collider.getAABB) {
+			throw new Error("Error: Can't register a collider that has no getAABB function.");
 		}
 		if (this.collisionLayers[layer]) {
 			this.collisionLayers[layer].push(collider);
@@ -28,30 +28,31 @@ var CollisionHandler = {
 	},
 	getCollision(collider, layer) {
 		var collisionLayer = this.collisionLayers[layer];
-		var colliderBounds = collider.getBounds();
+		var AABB1 = collider.getAABB();
 		for (var i = 0; i < collisionLayer.length; i++) {
 			var currentCollidee = collisionLayer[i];
 			if (currentCollidee == collider) continue;
-			var collideeBounds = currentCollidee.getBounds();
-			var isInsideVertically = colliderBounds.bottom > collideeBounds.top && colliderBounds.top < collideeBounds.bottom;
-			var isInsideHorizontally = colliderBounds.right > collideeBounds.left && colliderBounds.left < collideeBounds.right;
-			if (isInsideHorizontally && isInsideVertically) {
-				GameEvents.emit('collision', collider, currentCollidee);
-			}
-		}
-	},
-	getCollisionAtPoint(collider, point, layer) {
-		var collisionLayer = this.collisionLayers[layer];
-		for (var i = 0; i < collisionLayer.length; i++) {
-			var currentCollidee = collisionLayer[i];
-			if (currentCollidee == collider) continue;
-			var collideeBounds = currentCollidee.getBounds();
+			var AABB2 = currentCollidee.getAABB();
 
-			var isInsideVertically = point.y > collideeBounds.top && point.y < collideeBounds.bottom;
-			var isInsideHorizontally = point.x > collideeBounds.left && point.x < collideeBounds.right;
-			if (isInsideHorizontally && isInsideVertically) {
-				GameEvents.emit('collision', collider, currentCollidee);
+			var overlapX = Math.abs(AABB1.centre.x - AABB2.centre.x) - AABB1.xw - AABB2.xw;
+			if (overlapX > 0) {
+				continue;
 			}
+			var overlapY = Math.abs(AABB1.centre.y - AABB2.centre.y) - AABB1.yw - AABB2.yw;
+			if (overlapY > 0) {
+				continue;
+			}
+
+			var projectionVector;
+			if (overlapX > overlapY) {
+				var projectionX = AABB1.centre.x > AABB2.centre.x ? -overlapX : overlapX;
+				projectionVector = new Vector2(projectionX, 0);
+			} else {
+				var projectionY = AABB1.centre.y > AABB2.centre.y ? -overlapY : overlapY;
+				projectionVector = new Vector2(0, projectionY);
+			}
+
+			GameEvents.emit('collision', collider, currentCollidee, projectionVector);
 		}
 	}
 }

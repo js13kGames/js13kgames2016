@@ -9,14 +9,14 @@ PlayerModel.prototype = {
 		this.isOnFloor = false;
 		this.size = 30;
 		this.velocity = new Vector2(0, 0);
-		this.position = new Vector2(0, 0);	
+		this.position = new Vector2(0, 0);
+		this.jumpCount = 2;
 	},
-	getBounds: function() {
+	getAABB: function() {
 		return {
-			top: this.position.y - this.size / 2,
-			right: this.position.x + this.size / 2,
-			bottom: this.position.y + this.size / 2,
-			left: this.position.x - this.size / 2
-		}
+			centre: new Vector2(this.position.x + this.size/2, this.position.y + this.size/2),
+			xw: this.size / 2,
+			yw: this.size / 2
+		};
 	}
 }

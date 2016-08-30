@@ -10,6 +10,9 @@ function PlayerController() {
 }
 
 PlayerController.prototype = {
+	getAABB: function() {
+		return this.model.getAABB();
+	},
 	onLevelStarted: function(levelModel) {
 		this.model.reset();
 		this.model.position = levelModel.spawnPoint.position.copy();
@@ -23,9 +26,11 @@ PlayerController.prototype = {
 				this.model.direction = -1;
 				break;
 			case 38: //up
-				if (this.model.isOnFloor) {
+				if (this.model.jumpCount < 2) {
 					this.model.velocity.y -= 500;
 					this.model.isOnFloor = false;
+					this.model.jumpCount++;
+					console.log(this.model.isOnFloor);
 				}
 				break;
 			case 39: //right
@@ -44,45 +49,49 @@ PlayerController.prototype = {
 				break;
 		}
 	},
-	onCollision: function(collider, collidee) {
+	onCollision: function(collider, collidee, collisionVector) {
 		if (collider != this) return;
+		var normalisedCollisionVector = collisionVector.normalise();
+		var playerDirection = this.model.velocity.normalise();
+		if (playerDirection.x < 0) {
+			normalisedCollisionVector.x *= -1;
+		}
+		if (playerDirection.y < 0) {
+			normalisedCollisionVector.y *= -1;
+		}
 
-		console.log(collidee.type);
+		var reflectedForce = this.model.velocity.scaleByVector(normalisedCollisionVector);
+
 		switch (collidee.type) {
 			case "exit":
 				GameEvents.emit("exitReached");
 			break;
-			case "floor":
+			/*case "floor":
 				if (window.glitchMode) return;
-				this.model.velocity.y = 0;
+				this.model.position.add(collisionVector);
+				this.model.velocity.add(reflectedForce);
 				this.model.isOnFloor = true;
-				this.model.position.y = collidee.getBounds().top;
 			break;
 			case "antifloor":
 				if (!window.glitchMode) return;
-				this.model.velocity.y = 0;
+				this.model.position.add(collisionVector);
+				this.model.velocity.add(reflectedForce);
 				this.model.isOnFloor = true;
-				this.model.position.y = collidee.getBounds().top;
-			break;
+			break;*/
 			case "blocker":
-				if (this.model.velocity.y > 0) {
-					this.model.velocity.y = 0;
+				if (normalisedCollisionVector.y == -1) {
 					this.model.isOnFloor = true;
-					this.model.position.y = collidee.getBounds().top;
+					this.model.jumpCount = 0;
+					console.log(this.model.isOnFloor);
 				}
-				if (this.model.velocity.x > 0) {
-					this.model.velocity.x = 0;
-					this.model.position.x = collidee.getBounds().left;
-				} else if (this.model.velocity.x < 0) {
-					this.model.velocity.x = 0;
-					this.model.position.x = collidee.getBounds().right;
-				}
+				this.model.position.add(collisionVector);
+				this.model.velocity.add(reflectedForce);
 		}
 	},
 	update: function(dt) {
 		if (!this.model.levelStarted) return;
-		
-		this.model.isOnFloor = false;
+		// this.model.isOnFloor = false;
+
 		
 		if (this.model.direction > 0) {
 			this.model.velocity.x += SPEED;
@@ -92,18 +101,15 @@ PlayerController.prototype = {
 			this.model.velocity.x = Math.max(this.model.velocity.x, -MAX_SPEED)
 		}
 		this.model.velocity.x *= FRICTION;
-		this.model.velocity.y += GRAVITY;
+
+		if (!this.model.isOnFloor) {
+			this.model.velocity.y += GRAVITY;
+		}
+
+		GameEvents.emit("detectCollision", this, "level");
 
 		this.model.position.add(this.model.velocity.scale(dt));
 
-		if (this.model.position.y >= canvas.height) {
-			this.model.isOnFloor = true;
-			this.model.position.y = canvas.height;
-		}
-
-		var nextPosition = this.model.position.copy();
-		nextPosition.add(this.model.velocity.scale(dt));
-		GameEvents.emit("detectCollisionAtPoint", this, nextPosition, "level");
 
 	}
 }
