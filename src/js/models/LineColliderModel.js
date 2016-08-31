@@ -12,27 +12,14 @@ LineColliderModel.prototype = {
 
 		var dotLines = otherLine.x * thisLine.y - otherLine.y * thisLine.x;
 
+		if (dotLines === 0) return;
+
 		var check1 = ( deltaA.x * otherLine.y - deltaA.y * otherLine.x ) / dotLines;
-		if( check1 < 0 || check1 > 1 )
-		{
-			return {
-				isIntersecting: false,
-				intersection: null
-			};
-		}
+		if( check1 < 0 || check1 > 1 ) return;
 
 		var check2 = ( deltaA.x * thisLine.y - deltaA.y * thisLine.x ) / dotLines;
-		if( check2 < 0 || check2 > 1 )
-		{
-			return {
-				isIntersecting: false,
-				intersection: null
-			};
-		}
+		if( check2 < 0 || check2 > 1 ) return;
 
-		return {
-			isIntersecting: true,
-			intersection: otherA.add(otherLine.scale(check2))
-		};
+		return otherA.add(otherLine.scale(check2)).subtract(new Vector2(0, 1));
 	}
 }
