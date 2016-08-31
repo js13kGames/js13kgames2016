@@ -115,7 +115,7 @@ PlayerController.prototype = {
 						this.model.jumpCount = 0;
 					}
 					this.model.velocity.y = 0;
-					this.model.position = data.intersectionResult.add(this.model.velocity.scale(dt));
+					this.model.position = data.intersectionResult.intersection.add(this.model.velocity.scale(dt));
 				} else {
 					this.model.position = this.model.position.add(this.model.velocity.scale(dt));
 				}
