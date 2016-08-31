@@ -26,11 +26,11 @@ PlayerController.prototype = {
 				this.model.direction = -1;
 				break;
 			case 38: //up
-				if (this.model.jumpCount < 2) {
-					this.model.velocity.y -= 500;
+				if (this.model.jumpCount < MAX_JUMPS) {
+					this.model.velocity.y -= JUMP_STRENGTH;
 					this.model.isOnFloor = false;
 					this.model.jumpCount++;
-					console.log(this.model.isOnFloor);
+					this.model.isStartingJump = true;
 				}
 				break;
 			case 39: //right
@@ -89,23 +89,44 @@ PlayerController.prototype = {
 		}
 		this.model.velocity.x *= FRICTION;
 
-		if (!this.model.isOnFloor) {
-			this.model.velocity.y += GRAVITY * dt;
+		var floorCheckA = this.model.position,
+			floorCheckB = this.model.position.add(new Vector2(0, 1));
+
+		if (!this.model.isStartingJump) {
+			GameEvents.emit("detectCollision", this, "level", floorCheckA, floorCheckB,
+				function onResult(data) {
+					this.model.isOnFloor = data != undefined;
+				}
+			);
 		}
 
 		var pointA = this.model.position,
 			pointB = this.model.position.add(this.model.velocity.scale(dt));
 
+		if (!this.model.isOnFloor) {
+			this.model.velocity.y += GRAVITY * dt;
+		}
+
 		GameEvents.emit("detectCollision", this, "level", pointA, pointB,
 			function onResult(data) {
-				if (data) {
+				if (data && !this.model.isStartingJump) {
+					if (!this.model.isOnFloor) {
+						this.model.isOnFloor = true;
+						this.model.jumpCount = 0;
+					}
 					this.model.velocity.y = 0;
-					this.model.position = data.intersectionResult;
+					this.model.position = data.intersectionResult.add(this.model.velocity.scale(dt));
 				} else {
 					this.model.position = this.model.position.add(this.model.velocity.scale(dt));
 				}
 			}
 		);
+		
+		if (window.drawDebug) {
+			this.model.debugDrawPoints = [this.model.position, this.model.position.add(this.model.velocity.scale(dt))];
+		}
+
+		this.model.isStartingJump = false;
 
 	}
 }

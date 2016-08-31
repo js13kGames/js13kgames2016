@@ -20,6 +20,6 @@ LineColliderModel.prototype = {
 		var check2 = ( deltaA.x * thisLine.y - deltaA.y * thisLine.x ) / dotLines;
 		if( check2 < 0 || check2 > 1 ) return;
 
-		return otherA.add(otherLine.scale(check2)).subtract(new Vector2(0, 1));
+		return otherA.add(otherLine.scale(check2));
 	}
 }

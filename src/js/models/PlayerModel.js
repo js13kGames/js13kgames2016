@@ -10,7 +10,7 @@ PlayerModel.prototype = {
 		this.size = 30;
 		this.velocity = new Vector2(0, 0);
 		this.position = new Vector2(0, 0);
-		this.jumpCount = 2;
+		this.jumpCount = MAX_JUMPS;
 	},
 	getAABB: function() {
 		return {
