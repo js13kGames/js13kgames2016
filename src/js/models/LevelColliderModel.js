@@ -4,11 +4,7 @@ function LevelColliderModel(position, width, height, type, index) {
 	this.height = height;
 	this.type = type;
 	this.index = index;
-	this.lineCollider = new LineColliderController(
-		new Vector2(position.x, position.y),
-		new Vector2(position.x + width, position.y)
-	);
-	GameEvents.emit('registerCollider', this, 'level');
+
 	this.bounds = {
 		top: this.position.y,
 		right: this.position.x + this.width,
@@ -29,8 +25,5 @@ LevelColliderModel.prototype = {
 	destroy: function() {
 		GameEvents.emit("deregisterCollider", this, "level");
 		this.lineCollider.destroy();
-	},
-	checkIntersection: function(otherA, otherB) {
-		return this.lineCollider.checkIntersection(otherA, otherB);
 	}
 }

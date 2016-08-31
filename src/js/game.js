@@ -25,6 +25,7 @@
 
 window.NewGame = function() {
 	var levelIndex = 0;
+	var levelCollisionController = new LevelCollisionController();
 	var levelContainer = new LevelContainerController();
 	var player = new PlayerController();
 
@@ -46,6 +47,7 @@ window.NewGame = function() {
 	function nextLevel() {
 		window.glitchMode = false;
 		levelContainer.generateLevelData(LevelData[levelIndex]);
+		levelCollisionController.generateCollisionsFromLevelData(LevelData[levelIndex]);
 		GameEvents.emit("startLevel", levelContainer.model);
 		levelIndex = (levelIndex + 1) % LevelData.length;
 	}

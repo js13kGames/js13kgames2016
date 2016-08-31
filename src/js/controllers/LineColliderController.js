@@ -1,6 +1,7 @@
 function LineColliderController(a, b) {
 	this.model = new LineColliderModel(a, b);
 	this.view = new LineColliderView(this.model);
+	GameEvents.emit('registerCollider', this, 'level');
 }
 
 LineColliderController.prototype = {

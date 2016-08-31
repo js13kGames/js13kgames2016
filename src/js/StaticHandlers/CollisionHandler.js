@@ -7,8 +7,8 @@ var CollisionHandler = {
 		this.collisionLayers = {};
 	},
 	onRegisterCollider: function(collider, layer) {
-		if (!collider.getAABB) {
-			throw new Error("Error: Can't register a collider that has no getAABB function.");
+		if (!collider.model.normal) {
+			throw new Error("Error: Can't register a collider that has no normal.");
 		}
 		if (this.collisionLayers[layer]) {
 			this.collisionLayers[layer].push(collider);
