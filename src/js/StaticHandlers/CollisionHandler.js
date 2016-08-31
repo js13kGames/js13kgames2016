@@ -33,12 +33,12 @@ var CollisionHandler = {
 			var currentCollidee = collisionLayer[i];
 			if (currentCollidee == collider) continue;
 
-			var intersectionCheck = currentCollidee.checkIntersection(pointA, pointB);
-			if (intersectionCheck.isIntersecting) {
+			var intersectionCheckResult = currentCollidee.checkIntersection(pointA, pointB);
+			if (intersectionCheckResult) {
 				callback.call(collider,
 					{
 						collidee: currentCollidee,
-						intersectionResult: intersectionCheck.intersection
+						intersectionResult: intersectionCheckResult
 					}
 				);
 				return;
