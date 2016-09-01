@@ -24,6 +24,5 @@ LevelColliderModel.prototype = {
 	},
 	destroy: function() {
 		GameEvents.emit("deregisterCollider", this, "level");
-		this.lineCollider.destroy();
 	}
 }

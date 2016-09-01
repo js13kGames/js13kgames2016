@@ -101,6 +101,8 @@ PlayerController.prototype = {
 					case "blocker":
 						this.handleBlockerCollision(collisionData.collidee);
 					break;
+					case "exit":
+						this.handleExitCollision();
 				}
 			}
 		}
@@ -134,6 +136,9 @@ PlayerController.prototype = {
 				}
 			break;
 		}
+	},
+	handleExitCollision: function() {
+		GameEvents.emit("exitReached");
 	},
 	addVelocityToPosition: function() {
 		this.model.position = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));

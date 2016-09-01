@@ -33,6 +33,7 @@ window.NewGame = function() {
 
 	GameEvents.on("exitReached", function() {
 		levelContainer.destroyLevelData();
+		levelCollisionController.destroyCollisionData();
 		nextLevel();
 	})
 

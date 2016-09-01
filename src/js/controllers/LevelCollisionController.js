@@ -1,4 +1,5 @@
 function LevelCollisionController() {
+	this.collisions = [];
 }
 
 LevelCollisionController.prototype = {
@@ -18,18 +19,18 @@ LevelCollisionController.prototype = {
 				if (prevCell != undefined) {
 					if (prevCell != currentCell) {
 						if (currentCell !== 0) {
-							new LineColliderController(
+							this.collisions.push(new LineColliderController(
 								new Vector2(width * c, height * r),
 								new Vector2(width * c, height * (r+1)),
 								currentCell
-							);
+							));
 						}
 						if (prevCell !== 0) {
-							new LineColliderController(
+							this.collisions.push(new LineColliderController(
 								new Vector2(width * c, height * (r+1)),
 								new Vector2(width * c, height * r),
 								prevCell
-							);
+							));
 						}
 						
 					}
@@ -44,23 +45,29 @@ LevelCollisionController.prototype = {
 				if (prevCell != undefined) {
 					if (prevCell != currentCell) {
 						if (currentCell !== 0) {
-							new LineColliderController(
+							this.collisions.push(new LineColliderController(
 								new Vector2(width * (c+1), height * r),
 								new Vector2(width * c, height * r),
 								currentCell
-							);
+							));
 						}
 						if (prevCell !== 0) {
-							new LineColliderController(
+							this.collisions.push(new LineColliderController(
 								new Vector2(width * c, height * r),
 								new Vector2(width * (c+1), width * r),
 								prevCell
-							);
+							));
 						}
 					}
 				}
 				prevCell = currentCell;
 			}
 		}
+	},
+	destroyCollisionData: function() {
+		for (var i = 0; i < this.collisions.length; i++) {
+			this.collisions[i].destroy();
+		}
+		this.collisions = [];
 	}
 }

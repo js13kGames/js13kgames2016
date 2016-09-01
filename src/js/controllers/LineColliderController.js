@@ -17,5 +17,6 @@ LineColliderController.prototype = {
 	},
 	destroy: function() {
 		this.view.destroy();
+		GameEvents.emit("deregisterCollider", this, "level");
 	}
 }
