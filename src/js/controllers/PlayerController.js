@@ -2,6 +2,12 @@ function PlayerController() {
 	this.model = new PlayerModel();
 	this.view = new PlayerView(this.model);
 
+	this.keysdown = {
+		left: false,
+		right: false,
+		up: false
+	};
+
 	GameEvents.on('arrowKeyDown', this.onKeyDown, this);
 	GameEvents.on('arrowKeyUp', this.onKeyUp, this);
 	GameEvents.on('update', this.update, this);
@@ -23,9 +29,10 @@ PlayerController.prototype = {
 		if (!this.model.levelStarted) return;
 		switch (e.keyCode) {
 			case 37: //left
-				this.model.direction = -1;
+				this.keysdown.left = true;
 				break;
 			case 38: //up
+				this.keysdown.up = true;
 				if (this.model.jumpCount < MAX_JUMPS) {
 					this.model.velocity.y -= JUMP_STRENGTH;
 					this.model.isOnFloor = false;
@@ -34,7 +41,7 @@ PlayerController.prototype = {
 				}
 				break;
 			case 39: //right
-				this.model.direction = 1;
+				this.keysdown.right = true;
 				break;
 			case 40: //down
 				break;
@@ -44,16 +51,24 @@ PlayerController.prototype = {
 		if (!this.model.levelStarted) return;
 		switch (e.keyCode) {
 			case 37:
+				this.keysdown.left = false;
+				break;
 			case 39:
-				this.model.direction = 0;
+				this.keysdown.right = false;
 				break;
 		}
 	},
 	adjustXVelocity: function() {
-		if (this.model.direction > 0) {
+		if (this.keysdown.right && !this.keysdown.left) {
+			if (this.model.velocity.x < 0) {
+				this.model.velocity.x = 0;
+			}
 			this.model.velocity.x += (ACCELERATION * this.lastFrameTime);
 			this.model.velocity.x = Math.min(this.model.velocity.x, MAX_SPEED)
-		} else if (this.model.direction < 0) {
+		} else if (this.keysdown.left && !this.keysdown.right) {
+			if (this.model.velocity.x > 0) {
+				this.model.velocity.x = 0;
+			}
 			this.model.velocity.x -= (ACCELERATION * this.lastFrameTime);
 			this.model.velocity.x = Math.max(this.model.velocity.x, -MAX_SPEED)
 		}
