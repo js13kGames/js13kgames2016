@@ -1,5 +1,6 @@
 function LevelCollisionController() {
 	this.collisions = [];
+	this.OVERLAP = 15;
 }
 
 LevelCollisionController.prototype = {
@@ -20,15 +21,15 @@ LevelCollisionController.prototype = {
 					if (prevCell != currentCell) {
 						if (currentCell !== 0) {
 							this.collisions.push(new LineColliderController(
-								new Vector2(width * c, height * r),
-								new Vector2(width * c, height * (r+1)),
+								new Vector2(width * c, (height * r)),
+								new Vector2(width * c, (height * (r+1))),
 								currentCell
 							));
 						}
 						if (prevCell !== 0) {
 							this.collisions.push(new LineColliderController(
-								new Vector2(width * c, height * (r+1)),
-								new Vector2(width * c, height * r),
+								new Vector2(width * c,(height * (r+1))),
+								new Vector2(width * c, (height * r)),
 								prevCell
 							));
 						}
@@ -46,15 +47,15 @@ LevelCollisionController.prototype = {
 					if (prevCell != currentCell) {
 						if (currentCell !== 0) {
 							this.collisions.push(new LineColliderController(
-								new Vector2(width * (c+1), height * r),
-								new Vector2(width * c, height * r),
+								new Vector2((width * (c+1)) + this.OVERLAP, height * r),
+								new Vector2((width * c) - this.OVERLAP, height * r),
 								currentCell
 							));
 						}
 						if (prevCell !== 0) {
 							this.collisions.push(new LineColliderController(
-								new Vector2(width * c, height * r),
-								new Vector2(width * (c+1), width * r),
+								new Vector2((width * c) - this.OVERLAP, height * r),
+								new Vector2((width * (c+1)) + this.OVERLAP, width * r),
 								prevCell
 							));
 						}
