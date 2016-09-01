@@ -1,7 +1,8 @@
-function LineColliderModel(a, b) {
+function LineColliderModel(a, b, type) {
 	this.a = a;
 	this.b = b;
 	this.normal = this.a.crossProduct(this.b).normalise();
+	this.type = type;
 }
 
 LineColliderModel.prototype = {
@@ -24,5 +25,18 @@ LineColliderModel.prototype = {
 			intersection: otherA.add(otherLine.scale(check2)),
 			normal: this.normal
 		};
+	},
+	getDirection: function() {
+		if (this.normal.x === 0) {
+			if (this.normal.y === -1) {
+				return "up";
+			} else {
+				return "down";
+			}
+		} else if (this.normal.x < 0) {
+			return "left";
+		} else {
+			return "right";
+		}
 	}
 }

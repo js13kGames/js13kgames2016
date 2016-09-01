@@ -28,6 +28,7 @@ var CollisionHandler = {
 	},
 	getCollision(collider, layer, pointA, pointB, callback) {
 		var collisionLayer = this.collisionLayers[layer];
+		var collisions = [];
 
 		for (var i = 0; i < collisionLayer.length; i++) {
 			var currentCollidee = collisionLayer[i];
@@ -35,17 +36,14 @@ var CollisionHandler = {
 
 			var intersectionCheckResult = currentCollidee.checkIntersection(pointA, pointB);
 			if (intersectionCheckResult) {
-				callback.call(collider,
-					{
-						collidee: currentCollidee,
-						intersectionResult: intersectionCheckResult
-					}
-				);
-				return;
+				collisions.push({
+					collidee: currentCollidee,
+					intersectionResult: intersectionCheckResult
+				});
 			}
 			
 		}
-		callback.call(collider);
+		callback.call(collider, collisions);
 	}
 
 }

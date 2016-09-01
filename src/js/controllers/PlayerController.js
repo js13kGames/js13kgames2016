@@ -49,81 +49,95 @@ PlayerController.prototype = {
 				break;
 		}
 	},
-	onCollision: function(collider, collidee, intersectionVector) {
-		if (collider != this) return;
-		console.log(collidee.type);
-
-		switch (collidee.type) {
-			case "exit":
-				GameEvents.emit("exitReached");
-			break;
-			/*case "floor":
-				if (window.glitchMode) return;
-				this.model.position.add(intersectionVector);
-				this.model.velocity.add(reflectedForce);
-				this.model.isOnFloor = true;
-			break;
-			case "antifloor":
-				if (!window.glitchMode) return;
-				this.model.position.add(intersectionVector);
-				this.model.velocity.add(reflectedForce);
-				this.model.isOnFloor = true;
-			break;*/
-			case "blocker":
-				this.model.position = intersectionVector;
-				this.model.velocity.y = 0;
-				this.model.isOnFloor = true;
-		}
-	},
-	update: function(dt) {
-		if (!this.model.levelStarted) return;
-		// this.model.isOnFloor = false;
-
-		
+	adjustXVelocity: function() {
 		if (this.model.direction > 0) {
-			this.model.velocity.x += SPEED;
+			this.model.velocity.x += (ACCELERATION * this.lastFrameTime);
 			this.model.velocity.x = Math.min(this.model.velocity.x, MAX_SPEED)
 		} else if (this.model.direction < 0) {
-			this.model.velocity.x -= SPEED;
+			this.model.velocity.x -= (ACCELERATION * this.lastFrameTime);
 			this.model.velocity.x = Math.max(this.model.velocity.x, -MAX_SPEED)
 		}
 		this.model.velocity.x *= FRICTION;
-
+	},
+	checkFloor: function() {
 		var floorCheckA = this.model.position,
 			floorCheckB = this.model.position.add(new Vector2(0, 1));
 
 		if (!this.model.isStartingJump) {
 			GameEvents.emit("detectCollision", this, "level", floorCheckA, floorCheckB,
 				function onResult(data) {
-					this.model.isOnFloor = data != undefined;
+					var isOnFloor = false;
+					for(var i = 0; i < data.length; i++) {
+						var collisionData = data[i];
+						var isBlockerCollision = collisionData.collidee.getType() === "blocker";
+						var isUpCollider = collisionData.collidee.getDirection() === "up";
+						isOnFloor = isBlockerCollision && isUpCollider;
+						if (isOnFloor) {
+							break;
+						}
+					}
+					this.model.isOnFloor = isOnFloor;
 				}
 			);
 		}
-
-		var pointA = this.model.position,
-			pointB = this.model.position.add(this.model.velocity.scale(dt));
-
+	},
+	adjustYVelocity: function() {
 		if (!this.model.isOnFloor) {
-			this.model.velocity.y += GRAVITY * dt;
+			this.model.velocity.y += GRAVITY * this.lastFrameTime;
 		}
+	},
+	checkCollisions: function() {
+		var pointA = this.model.position,
+			pointB = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));
 
-		GameEvents.emit("detectCollision", this, "level", pointA, pointB,
-			function onResult(data) {
-				if (data && !this.model.isStartingJump) {
-					if (!this.model.isOnFloor) {
-						this.model.isOnFloor = true;
-						this.model.jumpCount = 0;
-					}
-					this.model.velocity.y = 0;
-					this.model.position = data.intersectionResult.intersection.add(this.model.velocity.scale(dt));
-				} else {
-					this.model.position = this.model.position.add(this.model.velocity.scale(dt));
+		GameEvents.emit("detectCollision", this, "level", pointA, pointB, this.movePlayer);
+	},
+	movePlayer: function(data) {
+		if (data.length > 0) {
+			for (var i = 0; i < data.length; i++) {
+				var collisionData = data[i];
+				var type = collisionData.collidee.getType();
+				switch (type) {
+					case "blocker":
+						var direction = collisionData.collidee.getDirection();
+						switch (direction) {
+							case "up":
+								if (!this.model.isStartingJump) {
+									if (this.model.velocity.y > 0) {
+										this.model.isOnFloor = true;
+										this.model.jumpCount = 0;
+										this.model.velocity.y = 0;
+									}
+								}
+							break;
+							case "down":
+								if (this.model.velocity.y < 0){
+									this.model.velocity.y = 0;
+								}
+							break;
+						}
+					break;
 				}
 			}
-		);
-		
+		}
+		this.addVelocityToPosition();
+	},
+	addVelocityToPosition: function() {
+		this.model.position = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));
+	},
+	setDebugDrawPoints: function() {
+		this.model.debugDrawPoints = [this.model.position, this.model.position.add(this.model.velocity.scale(this.lastFrameTime))];
+	},
+	update: function(dt) {
+		if (!this.model.levelStarted) return;
+		this.lastFrameTime = dt;
+
+		this.adjustXVelocity();
+		this.checkFloor();
+		this.adjustYVelocity();
+		this.checkCollisions();
 		if (window.drawDebug) {
-			this.model.debugDrawPoints = [this.model.position, this.model.position.add(this.model.velocity.scale(dt))];
+			this.setDebugDrawPoints();
 		}
 
 		this.model.isStartingJump = false;

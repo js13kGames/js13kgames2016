@@ -18,17 +18,17 @@ LevelCollisionController.prototype = {
 				if (prevCell != undefined) {
 					if (prevCell != currentCell) {
 						if (currentCell !== 0) {
-							console.log("Left collider between " + prevCell + " and " + currentCell);
 							new LineColliderController(
 								new Vector2(width * c, height * r),
-								new Vector2(width * c, height * (r+1))
+								new Vector2(width * c, height * (r+1)),
+								currentCell
 							);
 						}
 						if (prevCell !== 0) {
-							console.log("right collider between " + prevCell + " and " + currentCell);
 							new LineColliderController(
 								new Vector2(width * c, height * (r+1)),
-								new Vector2(width * c, height * r)
+								new Vector2(width * c, height * r),
+								prevCell
 							);
 						}
 						
@@ -46,13 +46,15 @@ LevelCollisionController.prototype = {
 						if (currentCell !== 0) {
 							new LineColliderController(
 								new Vector2(width * (c+1), height * r),
-								new Vector2(width * c, height * r)
+								new Vector2(width * c, height * r),
+								currentCell
 							);
 						}
 						if (prevCell !== 0) {
 							new LineColliderController(
 								new Vector2(width * c, height * r),
-								new Vector2(width * (c+1), width * r)
+								new Vector2(width * (c+1), width * r),
+								prevCell
 							);
 						}
 					}
