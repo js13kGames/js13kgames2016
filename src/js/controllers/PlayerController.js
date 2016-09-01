@@ -99,28 +99,31 @@ PlayerController.prototype = {
 				var type = collisionData.collidee.getType();
 				switch (type) {
 					case "blocker":
-						var direction = collisionData.collidee.getDirection();
-						switch (direction) {
-							case "up":
-								if (!this.model.isStartingJump) {
-									if (this.model.velocity.y > 0) {
-										this.model.isOnFloor = true;
-										this.model.jumpCount = 0;
-										this.model.velocity.y = 0;
-									}
-								}
-							break;
-							case "down":
-								if (this.model.velocity.y < 0){
-									this.model.velocity.y = 0;
-								}
-							break;
-						}
+						this.handleBlockerCollision(collisionData.collidee);
 					break;
 				}
 			}
 		}
 		this.addVelocityToPosition();
+	},
+	handleBlockerCollision: function(blocker) {
+		var direction = blocker.getDirection();
+		switch (direction) {
+			case "up":
+				if (!this.model.isStartingJump) {
+					if (this.model.velocity.y > 0) {
+						this.model.isOnFloor = true;
+						this.model.jumpCount = 0;
+						this.model.velocity.y = 0;
+					}
+				}
+			break;
+			case "down":
+				if (this.model.velocity.y < 0){
+					this.model.velocity.y = 0;
+				}
+			break;
+		}
 	},
 	addVelocityToPosition: function() {
 		this.model.position = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));
