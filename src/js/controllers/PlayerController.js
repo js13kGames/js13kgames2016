@@ -90,9 +90,9 @@ PlayerController.prototype = {
 		var pointA = this.model.position,
 			pointB = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));
 
-		GameEvents.emit("detectCollision", this, "level", pointA, pointB, this.movePlayer);
+		GameEvents.emit("detectCollision", this, "level", pointA, pointB, this.handleCollisionData);
 	},
-	movePlayer: function(data) {
+	handleCollisionData: function(data) {
 		if (data.length > 0) {
 			for (var i = 0; i < data.length; i++) {
 				var collisionData = data[i];
@@ -119,8 +119,18 @@ PlayerController.prototype = {
 				}
 			break;
 			case "down":
-				if (this.model.velocity.y < 0){
+				if (this.model.velocity.y < 0) {
 					this.model.velocity.y = 0;
+				}
+			break;
+			case "right":
+				if (this.model.velocity.x < 0) {
+					this.model.velocity.x = 0;
+				}
+			break;
+			case "left":
+				if (this.model.velocity.x > 0) {
+					this.model.velocity.x = 0;
 				}
 			break;
 		}
