@@ -15,6 +15,15 @@ LineColliderController.prototype = {
 	getType: function() {
 		return this.model.type;
 	},
+	setAsInternal: function(shouldSet) {
+		this.model.isInternal = shouldSet;
+	},
+	setA: function(newA) {
+		this.model.a = newA;
+	},
+	setB: function(newB) {
+		this.model.b = newB;
+	},
 	destroy: function() {
 		this.view.destroy();
 		GameEvents.emit("deregisterCollider", this, "level");
