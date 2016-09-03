@@ -6,15 +6,13 @@ function LineColliderView(model) {
 LineColliderView.prototype = {
 	draw: function() {
 		if (window.drawDebug) {
-			if (this.model.isInternal) {
-				ctx.strokeStyle = "red";
-				ctx.beginPath();
-				ctx.moveTo(this.model.a.x, this.model.a.y);
-				ctx.lineTo(this.model.b.x, this.model.b.y);
-				ctx.stroke();
-			} else {
-				ctx.strokeStyle = "red";
-			}
+			ctx.strokeStyle = "red";
+			
+			ctx.beginPath();
+			ctx.moveTo(this.model.a.x, this.model.a.y);
+			ctx.lineTo(this.model.b.x, this.model.b.y);
+			ctx.stroke();
+
 			ctx.beginPath();
 			var centerX = this.model.a.x + ((this.model.b.x - this.model.a.x) / 2);
 			var centerY = this.model.a.y + ((this.model.b.y - this.model.a.y) / 2);
