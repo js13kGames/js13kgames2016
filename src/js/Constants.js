@@ -7,3 +7,5 @@ var MAX_JUMPS = 1;
 
 var PLAYER_SIZE = 30;
 var TILE_SIZE = 70;
+
+var STARTING_LEVEL = 0;

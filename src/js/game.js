@@ -24,12 +24,12 @@
 })();
 
 window.NewGame = function() {
-	var levelIndex = 0;
+	var levelIndex = STARTING_LEVEL;
 	var levelCollisionController = new LevelCollisionController();
 	var levelContainer = new LevelContainerController();
 	var player = new PlayerController();
 
-	loadLevel(0);
+	loadLevel(levelIndex);
 
 	GameEvents.on("exitReached", function() {
 		loadLevel(levelIndex = (levelIndex + 1) % LevelData.length);
