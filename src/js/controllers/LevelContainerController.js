@@ -12,8 +12,8 @@ LevelContainerController.prototype = {
 				var columnValue = row[c];
 
 				if (columnValue == 0) continue;
-				var width = canvas.width / row.length;
-				var height = canvas.height / data.length;
+				var width = TILE_SIZE;
+				var height = TILE_SIZE;
 				var x = width * c;
 				var y = height * r;
 				var type = this.colliderTypes[columnValue];

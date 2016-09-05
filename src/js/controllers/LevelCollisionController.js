@@ -11,8 +11,8 @@ LevelCollisionController.prototype = {
 
 		var row, col, r, c;
 		var prevCell, currentCell;
-		var width = canvas.width / data.length;
-		var height = canvas.height / data[0].length;
+		var width = TILE_SIZE;
+		var height = TILE_SIZE;
 
 		for (r = 0; r < data.length - 1; r++) {
 			for (c = 0; c < data[r].length - 1; c++) {
