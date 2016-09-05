@@ -113,6 +113,16 @@ PlayerController.prototype = {
 				var collisionData = data[i];
 				var type = collisionData.collidee.getType();
 				switch (type) {
+					case "floor":
+						if (!window.glitchMode) {
+							this.handleBlockerCollision(collisionData.collidee);
+						}
+					break;
+					case "antifloor":
+						if (window.glitchMode) {
+							this.handleBlockerCollision(collisionData.collidee);
+						}
+					break;
 					case "blocker":
 						this.handleBlockerCollision(collisionData.collidee);
 					break;
