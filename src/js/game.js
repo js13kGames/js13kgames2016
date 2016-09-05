@@ -29,13 +29,15 @@ window.NewGame = function() {
 	var levelContainer = new LevelContainerController();
 	var player = new PlayerController();
 
-	nextLevel();
+	loadLevel(0);
 
 	GameEvents.on("exitReached", function() {
-		levelContainer.destroyLevelData();
-		levelCollisionController.destroyCollisionData();
-		nextLevel();
-	})
+		loadLevel(levelIndex = (levelIndex + 1) % LevelData.length);
+	});
+
+	GameEvents.on("playerDied", function() {
+		loadLevel(levelIndex);
+	});
 
 	GameEvents.on("arrowKeyDown", function(e) {
 		if (e.keyCode == 37) {
@@ -45,12 +47,14 @@ window.NewGame = function() {
 		}
 	})
 
-	function nextLevel() {
+	function loadLevel(nextIndex) {
 		window.glitchMode = false;
+		levelContainer.destroyLevelData();
+		levelCollisionController.destroyCollisionData();
 		levelContainer.generateLevelData(LevelData[levelIndex]);
 		levelCollisionController.generateCollisionsFromLevelData(LevelData[levelIndex]);
 		GameEvents.emit("startLevel", levelContainer.model);
-		levelIndex = (levelIndex + 1) % LevelData.length;
+		
 	}
 
 	var previousFrameTime = new Date();

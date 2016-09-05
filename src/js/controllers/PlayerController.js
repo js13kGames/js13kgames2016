@@ -168,6 +168,11 @@ PlayerController.prototype = {
 	addVelocityToPosition: function() {
 		this.model.position = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));
 	},
+	checkForFallenOutOfLevel: function() {
+		if (this.model.position.y > canvas.height) {
+			GameEvents.emit("playerDied");
+		}
+	},
 	setDebugDrawPoints: function() {
 		this.model.debugDrawPoints = [this.model.position, this.model.position.add(this.model.velocity.scale(this.lastFrameTime))];
 	},
@@ -179,6 +184,7 @@ PlayerController.prototype = {
 		this.checkFloor();
 		this.adjustYVelocity();
 		this.checkCollisions();
+		this.checkForFallenOutOfLevel();
 		if (window.drawDebug) {
 			this.setDebugDrawPoints();
 		}
