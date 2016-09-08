@@ -40,10 +40,12 @@ window.NewGame = function() {
 	});
 
 	GameEvents.on("arrowKeyDown", function(e) {
-		if (e.keyCode == 37) {
+		if (e.keyCode == 37 && !window.glitchMode) {
 			window.glitchMode = true;
-		} else if (e.keyCode == 39) {
+			GameEvents.emit("glitchModeChanged");
+		} else if (e.keyCode == 39 && window.glitchMode) {
 			window.glitchMode = false;
+			GameEvents.emit("glitchModeChanged");
 		}
 	})
 
