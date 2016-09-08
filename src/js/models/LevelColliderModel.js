@@ -19,9 +19,6 @@ function LevelColliderModel(position, width, height, type, index) {
 }
 
 LevelColliderModel.prototype = {
-	getAABB: function() {
-		return this.AABB;
-	},
 	destroy: function() {
 		GameEvents.emit("deregisterCollider", this, "level");
 	}

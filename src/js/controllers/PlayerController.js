@@ -16,9 +16,6 @@ function PlayerController() {
 }
 
 PlayerController.prototype = {
-	getAABB: function() {
-		return this.model.getAABB();
-	},
 	onLevelStarted: function(levelModel) {
 		this.model.reset();
 		this.model.position = levelModel.spawnPoint.position.copy();
