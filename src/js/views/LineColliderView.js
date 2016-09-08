@@ -4,7 +4,8 @@ function LineColliderView(model) {
 }
 
 LineColliderView.prototype = {
-	draw: function() {
+	draw: function(layer) {
+		if (layer !== "debug") return;
 		if (window.drawDebug) {
 			ctx.strokeStyle = "red";
 

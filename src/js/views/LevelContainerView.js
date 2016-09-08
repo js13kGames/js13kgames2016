@@ -4,7 +4,8 @@ function LevelContainerView(model) {
 }
 
 LevelContainerView.prototype = {
-	draw: function() {
+	draw: function(layer) {
+		if (layer !== "background") return;
 		var gradient;
 		if (window.glitchMode) {
 			gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);

@@ -75,7 +75,9 @@ window.NewGame = function() {
 
 	function draw() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		GameEvents.emit('draw');
+		for (var i = 0; i < DRAW_LAYERS.length; i++) {
+			GameEvents.emit('draw', DRAW_LAYERS[i]);
+		}
 	}
 
 	function getMaxDimension(level) {

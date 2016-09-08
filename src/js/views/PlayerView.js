@@ -4,7 +4,8 @@ function PlayerView(model) {
 }
 
 PlayerView.prototype = {
-	draw: function(dt) {
+	draw: function(layer) {
+		if (layer !== "player") return;
 		var scaledPosition = this.model.position.scale(window.gameScale);
 		var scaledSize = this.model.size * window.gameScale;
 

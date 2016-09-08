@@ -42,3 +42,10 @@ var TILE_TYPES = [
 		colour: "rgb(52, 73, 94)"
 	}
 ];
+
+var DRAW_LAYERS = [
+	"background",
+	"level",
+	"player",
+	"debug"
+];
