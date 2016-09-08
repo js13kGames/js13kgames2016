@@ -1,5 +1,4 @@
 function LevelContainerController() {
-	this.colliderTypes = ["none", "spawnPoint", "exit", "floor", "antifloor", "blocker"];
 	this.model = new LevelContainerModel();
 	this.view = new LevelContainerView(this.model);
 }
@@ -16,25 +15,28 @@ LevelContainerController.prototype = {
 				var height = TILE_SIZE;
 				var x = width * c;
 				var y = height * r;
-				var type = this.colliderTypes[columnValue];
-				var collider = new LevelColliderModel(new Vector2(x, y), width, height, type, 10 * r + c);
+				var type = TILE_TYPES[columnValue];
+				var tile = new LevelTileController(new Vector2(x, y), width, height, type, 10 * r + c);
 
 				if (columnValue == 1) {
-					this.model.spawnPoint = collider;
+					this.model.spawnPoint = tile;
 				} else if (columnValue == 2) {
-					this.model.exit = collider;
+					this.model.exit = tile;
 				} else {
-					this.model[type + "s"].push(collider);
+					this.model[type.name + "s"].push(tile);
 				}
-				this.model.levelObjects.push(collider);
+				this.model.levelObjects.push(tile);
 			}
 		}
 	},
 	destroyLevelData: function() {
 		for (var i = 0; i < this.model.levelObjects.length; i++) {
-			var collider = this.model.levelObjects[i];
-			collider.destroy();
+			var tile = this.model.levelObjects[i];
+			tile.destroy();
 		}
 		this.model.reset();
+	},
+	getSpawnPosition: function() {
+		return this.model.spawnPoint.getPosition();
 	}
 }

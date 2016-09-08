@@ -16,10 +16,10 @@ function PlayerController() {
 }
 
 PlayerController.prototype = {
-	onLevelStarted: function(levelModel) {
+	onLevelStarted: function(level) {
 		this.model.reset();
-		this.model.position = levelModel.spawnPoint.position.copy();
-		this.model.position = this.model.position.add(new Vector2(levelModel.spawnPoint.width/2, levelModel.spawnPoint.height/2));
+		this.model.position = level.getSpawnPosition();
+		this.model.position = this.model.position.add(new Vector2(TILE_SIZE/2, TILE_SIZE/2));
 		this.model.levelStarted = true;
 	},
 	onKeyDown: function(e) {

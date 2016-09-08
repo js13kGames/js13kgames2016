@@ -1,4 +1,4 @@
-function LevelColliderModel(position, width, height, type, index) {
+function LevelTileModel(position, width, height, type, index) {
 	this.position = position;
 	this.width = width;
 	this.height = height;
@@ -11,10 +11,4 @@ function LevelColliderModel(position, width, height, type, index) {
 		bottom: this.position.y + this.height,
 		left: this.position.x
 	};
-}
-
-LevelColliderModel.prototype = {
-	destroy: function() {
-		GameEvents.emit("deregisterCollider", this, "level");
-	}
 }

@@ -59,7 +59,7 @@ window.NewGame = function() {
 
 		levelContainer.generateLevelData(nextLevel);
 		levelCollisionController.generateCollisionsFromLevelData(nextLevel);
-		GameEvents.emit("startLevel", levelContainer.model);
+		GameEvents.emit("startLevel", levelContainer);
 		
 	}
 
