@@ -7,15 +7,18 @@ LineColliderView.prototype = {
 	draw: function() {
 		if (window.drawDebug) {
 			ctx.strokeStyle = "red";
+
+			var scaledA = this.model.a.scale(window.gameScale);
+			var scaledB = this.model.b.scale(window.gameScale);
 			
 			ctx.beginPath();
-			ctx.moveTo(this.model.a.x, this.model.a.y);
-			ctx.lineTo(this.model.b.x, this.model.b.y);
+			ctx.moveTo(scaledA.x, scaledA.y);
+			ctx.lineTo(scaledB.x, scaledB.y);
 			ctx.stroke();
 
 			ctx.beginPath();
-			var centerX = this.model.a.x + ((this.model.b.x - this.model.a.x) / 2);
-			var centerY = this.model.a.y + ((this.model.b.y - this.model.a.y) / 2);
+			var centerX = scaledA.x + ((scaledB.x - scaledA.x) / 2);
+			var centerY = scaledA.y + ((scaledB.y - scaledA.y) / 2);
 			var centerPoint = new Vector2(centerX, centerY);
 			ctx.moveTo(centerPoint.x, centerPoint.y);
 			ctx.lineTo(centerPoint.x + (this.model.normal.x * 10), centerPoint.y + (this.model.normal.y * 10));

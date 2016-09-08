@@ -51,8 +51,14 @@ window.NewGame = function() {
 		window.glitchMode = false;
 		levelContainer.destroyLevelData();
 		levelCollisionController.destroyCollisionData();
-		levelContainer.generateLevelData(LevelData[levelIndex]);
-		levelCollisionController.generateCollisionsFromLevelData(LevelData[levelIndex]);
+
+		var nextLevel = LevelData[nextIndex];
+		var maxDimension = getMaxDimension(nextLevel);
+
+		window.gameScale = 12 / maxDimension;
+
+		levelContainer.generateLevelData(nextLevel);
+		levelCollisionController.generateCollisionsFromLevelData(nextLevel);
 		GameEvents.emit("startLevel", levelContainer.model);
 		
 	}
@@ -72,4 +78,7 @@ window.NewGame = function() {
 		GameEvents.emit('draw');
 	}
 
+	function getMaxDimension(level) {
+		return Math.max(level.length, level[0].length);
+	}
 }

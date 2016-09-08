@@ -5,16 +5,22 @@ function PlayerView(model) {
 
 PlayerView.prototype = {
 	draw: function(dt) {
+		var scaledPosition = this.model.position.scale(window.gameScale);
+		var scaledSize = this.model.size * window.gameScale;
+
 		if (!this.model.levelStarted) return;
 		ctx.fillStyle = "rgb(255, 235, 59)";
-		ctx.fillRect(this.model.position.x - this.model.size / 2 , this.model.position.y - this.model.size, this.model.size, this.model.size);
+		ctx.fillRect(scaledPosition.x - scaledSize / 2 , scaledPosition.y - scaledSize, scaledSize, scaledSize);
 
 		if (window.drawDebug) {
 			ctx.strokeStyle = "green";
 			ctx.beginPath();
-			var points = this.model.debugDrawPoints;
-			ctx.moveTo(points[0].x, points[0].y);
-			ctx.lineTo(points[1].x, points[1].y);
+			var scaledPoints = [
+				this.model.debugDrawPoints[0].scale(window.gameScale),
+				this.model.debugDrawPoints[1].scale(window.gameScale) 
+			];
+			ctx.moveTo(scaledPoints[0].x, scaledPoints[0].y);
+			ctx.lineTo(scaledPoints[1].x, scaledPoints[1].y);
 			ctx.stroke();
 		}
 	}

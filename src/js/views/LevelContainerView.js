@@ -47,12 +47,15 @@ LevelContainerView.prototype = {
 		this.drawCollider(colour, colliderModel);
 	},
 	drawCollider: function(colour, colliderModel) {
+
+		var scaledPosition = colliderModel.position.scale(window.gameScale);
+		var scaledSize = TILE_SIZE * window.gameScale;
 		ctx.fillStyle = colour;
-		ctx.fillRect(colliderModel.bounds.left, colliderModel.bounds.top, colliderModel.width, colliderModel.height);
+		ctx.fillRect(scaledPosition.x, scaledPosition.y, scaledSize, scaledSize);
 
 		if (window.drawDebug) {
 			ctx.fillStyle = "white";
-			ctx.fillText(colliderModel.index, colliderModel.bounds.left, colliderModel.bounds.top + 10);
+			ctx.fillText(colliderModel.index, scaledPosition.x, scaledPosition.y + 10);
 		}
 	}
 }
