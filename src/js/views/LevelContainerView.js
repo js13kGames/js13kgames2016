@@ -19,6 +19,7 @@ LevelContainerView.prototype = {
 			gradient.addColorStop(1, "rgb(41, 128, 185)");
 		}
 		ctx.fillStyle = gradient;
+		ctx.globalAlpha = 1;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	},
 	destroy: function() {
