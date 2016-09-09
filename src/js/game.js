@@ -80,6 +80,16 @@ window.NewGame = function() {
 		for (var i = 0; i < DRAW_LAYERS.length; i++) {
 			GameEvents.emit('draw', DRAW_LAYERS[i]);
 		}
+
+		if (levelIndex < LessonData.length) {
+			var instructionText = LessonData[levelIndex];
+			ctx.font = (32 * window.gameScale) + "px monospace";
+			ctx.fillStyle = "white";
+			ctx.textAlign = "center";
+			ctx.globalAlpha = 1;
+			ctx.fillText(instructionText, canvas.width / 2, 60 * window.gameScale);
+		}
+
 	}
 
 	function getMaxDimension(level) {
