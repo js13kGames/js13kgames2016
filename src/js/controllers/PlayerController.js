@@ -57,12 +57,18 @@ PlayerController.prototype = {
 	},
 	adjustXVelocity: function() {
 		if (this.keysdown.right && !this.keysdown.left) {
+			if (window.glitchMode) {
+				GameEvents.emit("glitchModeChanged", false);
+			}
 			if (this.model.velocity.x < 0) {
 				this.model.velocity.x = 0;
 			}
 			this.model.velocity.x += (ACCELERATION * this.lastFrameTime);
 			this.model.velocity.x = Math.min(this.model.velocity.x, MAX_SPEED)
 		} else if (this.keysdown.left && !this.keysdown.right) {
+			if (!window.glitchMode) {
+				GameEvents.emit("glitchModeChanged", true);
+			}
 			if (this.model.velocity.x > 0) {
 				this.model.velocity.x = 0;
 			}

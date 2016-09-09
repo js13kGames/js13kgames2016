@@ -39,15 +39,9 @@ window.NewGame = function() {
 		loadLevel(levelIndex);
 	});
 
-	GameEvents.on("arrowKeyDown", function(e) {
-		if (e.keyCode == 37 && !window.glitchMode) {
-			window.glitchMode = true;
-			GameEvents.emit("glitchModeChanged");
-		} else if (e.keyCode == 39 && window.glitchMode) {
-			window.glitchMode = false;
-			GameEvents.emit("glitchModeChanged");
-		}
-	})
+	GameEvents.on("glitchModeChanged", function(mode) {
+		window.glitchMode = mode;
+	});
 
 	function loadLevel(nextIndex) {
 		window.glitchMode = false;
