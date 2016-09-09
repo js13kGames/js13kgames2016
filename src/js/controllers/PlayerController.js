@@ -172,7 +172,7 @@ PlayerController.prototype = {
 		this.model.position = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));
 	},
 	checkForFallenOutOfLevel: function() {
-		if (this.model.position.y > canvas.height) {
+		if (this.model.position.y * window.gameScale > canvas.height) {
 			GameEvents.emit("playerDied");
 		}
 	},
