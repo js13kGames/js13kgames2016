@@ -35,7 +35,7 @@ LevelTileView.prototype = {
 			break;
 		}
 
-		if (window.drawDebug) {
+		if (DRAW_DEBUG) {
 			ctx.fillStyle = "white";
 			ctx.font = "12px sans-serif";
 			ctx.textAlign = "left";

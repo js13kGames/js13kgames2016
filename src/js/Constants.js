@@ -4,6 +4,7 @@ var FRICTION = 0.8;
 var GRAVITY = 2500;
 var JUMP_STRENGTH = 1000;
 var MAX_JUMPS = 1;
+var DRAW_DEBUG = false;
 
 var PLAYER_SIZE = 30;
 var TILE_SIZE = 70;

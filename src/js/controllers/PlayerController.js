@@ -192,7 +192,7 @@ PlayerController.prototype = {
 		this.adjustYVelocity();
 		this.checkCollisions();
 		this.checkForFallenOutOfLevel();
-		if (window.drawDebug) {
+		if (DRAW_DEBUG) {
 			this.setDebugDrawPoints();
 		}
 

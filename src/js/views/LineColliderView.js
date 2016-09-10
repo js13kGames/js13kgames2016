@@ -6,7 +6,7 @@ function LineColliderView(model) {
 LineColliderView.prototype = {
 	draw: function(layer) {
 		if (layer !== "debug") return;
-		if (window.drawDebug) {
+		if (DRAW_DEBUG) {
 			if (Date.now() - this.model.lastCollisionTime < 100) {
 				ctx.strokeStyle = "white";
 			} else {

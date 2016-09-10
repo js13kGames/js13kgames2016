@@ -14,7 +14,7 @@ PlayerView.prototype = {
 		ctx.fillStyle = "rgb(255, 235, 59)";
 		ctx.fillRect(scaledPosition.x - scaledSize / 2 , scaledPosition.y - scaledSize, scaledSize, scaledSize);
 
-		if (window.drawDebug) {
+		if (DRAW_DEBUG) {
 			ctx.strokeStyle = "green";
 			ctx.beginPath();
 			var scaledPoints = [
