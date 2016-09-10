@@ -7,7 +7,7 @@ LevelContainerView.prototype = {
 	draw: function(layer) {
 		if (layer !== "background") return;
 		var gradient;
-		if (window.glitchMode === "antifloor") {
+		if (window.glitchMode === "floor") {
 			gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
 			gradient.addColorStop(0, "rgb(241, 196, 15)");
 			gradient.addColorStop(0.25, "rgb(241, 196, 15)");
