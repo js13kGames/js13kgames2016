@@ -7,7 +7,11 @@ LineColliderView.prototype = {
 	draw: function(layer) {
 		if (layer !== "debug") return;
 		if (window.drawDebug) {
-			ctx.strokeStyle = "red";
+			if (Date.now() - this.model.lastCollisionTime < 100) {
+				ctx.strokeStyle = "white";
+			} else {
+				ctx.strokeStyle = "red";
+			}
 
 			var scaledA = this.model.a.scale(window.gameScale);
 			var scaledB = this.model.b.scale(window.gameScale);

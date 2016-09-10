@@ -36,6 +36,7 @@ var CollisionHandler = {
 
 			var intersectionCheckResult = currentCollidee.checkIntersection(pointA, pointB);
 			if (intersectionCheckResult) {
+				currentCollidee.model.lastCollisionTime = Date.now();
 				collisions.push({
 					collidee: currentCollidee,
 					intersectionResult: intersectionCheckResult
