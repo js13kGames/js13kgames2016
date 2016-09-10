@@ -28,7 +28,9 @@ LevelTileView.prototype = {
 
 		if (window.drawDebug) {
 			ctx.fillStyle = "white";
-			ctx.fillText(this.model.index, scaledPosition.x, scaledPosition.y + 10);
+			ctx.font = "12px sans-serif";
+			ctx.textAlign = "left";
+			ctx.fillText(this.model.index, scaledPosition.x + 6, scaledPosition.y + 18);
 		}
 	},
 	destroy: function() {
