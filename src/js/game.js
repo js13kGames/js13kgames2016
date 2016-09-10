@@ -41,14 +41,14 @@ window.NewGame = function() {
 
 	GameEvents.on("glitchModeChanged", function(glitchMode) {
 		window.glitchMode = glitchMode;
-		levelCollisionController.generateCollisionsFromLevelData(LevelData[levelIndex]);
+		levelCollisionController.generateCollisionsFromLevelData(LevelData[levelIndex].level);
 	});
 
 	function loadLevel(nextIndex) {
 		window.glitchMode = "antifloor";
 		levelContainer.destroyLevelData();
 
-		var nextLevel = LevelData[nextIndex];
+		var nextLevel = LevelData[nextIndex].level;
 		var maxDimension = getMaxDimension(nextLevel);
 
 		window.gameScale = 12 / maxDimension;
@@ -74,13 +74,13 @@ window.NewGame = function() {
 			GameEvents.emit('draw', DRAW_LAYERS[i]);
 		}
 
-		if (levelIndex < LessonData.length) {
-			var instructionText = LessonData[levelIndex];
+		if (levelIndex < LevelData.length) {
+			var titleText = LevelData[levelIndex].title || "";
 			ctx.font = (32 * window.gameScale) + "px monospace";
 			ctx.fillStyle = "white";
 			ctx.textAlign = "center";
 			ctx.globalAlpha = 1;
-			ctx.fillText(instructionText, canvas.width / 2, 60 * window.gameScale);
+			ctx.fillText(titleText, canvas.width / 2, 60 * window.gameScale);
 		}
 
 	}
