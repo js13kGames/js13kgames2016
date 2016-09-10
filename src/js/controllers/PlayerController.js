@@ -57,8 +57,8 @@ PlayerController.prototype = {
 	},
 	adjustXVelocity: function() {
 		if (this.keysdown.right && !this.keysdown.left) {
-			if (window.glitchMode) {
-				GameEvents.emit("glitchModeChanged", false);
+			if (window.glitchMode === "floor") {
+				GameEvents.emit("glitchModeChanged", "antifloor");
 			}
 			if (this.model.velocity.x < 0) {
 				this.model.velocity.x = 0;
@@ -66,8 +66,8 @@ PlayerController.prototype = {
 			this.model.velocity.x += (ACCELERATION * this.lastFrameTime);
 			this.model.velocity.x = Math.min(this.model.velocity.x, MAX_SPEED)
 		} else if (this.keysdown.left && !this.keysdown.right) {
-			if (!window.glitchMode) {
-				GameEvents.emit("glitchModeChanged", true);
+			if (window.glitchMode === "antifloor") {
+				GameEvents.emit("glitchModeChanged", "floor");
 			}
 			if (this.model.velocity.x > 0) {
 				this.model.velocity.x = 0;
@@ -117,12 +117,12 @@ PlayerController.prototype = {
 				var type = collisionData.collidee.getType();
 				switch (type) {
 					case "floor":
-						if (!window.glitchMode) {
+						if (window.glitchMode === "antifloor") {
 							this.handleBlockerCollision(collisionData.collidee);
 						}
 					break;
 					case "antifloor":
-						if (window.glitchMode) {
+						if (window.glitchMode === "floor") {
 							this.handleBlockerCollision(collisionData.collidee);
 						}
 					break;

@@ -39,12 +39,12 @@ window.NewGame = function() {
 		loadLevel(levelIndex);
 	});
 
-	GameEvents.on("glitchModeChanged", function(mode) {
-		window.glitchMode = mode;
+	GameEvents.on("glitchModeChanged", function(glitchMode) {
+		window.glitchMode = glitchMode;
 	});
 
 	function loadLevel(nextIndex) {
-		window.glitchMode = false;
+		window.glitchMode = "antifloor";
 		levelContainer.destroyLevelData();
 		levelCollisionController.destroyCollisionData();
 
