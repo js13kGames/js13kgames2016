@@ -41,12 +41,12 @@ window.NewGame = function() {
 
 	GameEvents.on("glitchModeChanged", function(glitchMode) {
 		window.glitchMode = glitchMode;
+		levelCollisionController.generateCollisionsFromLevelData(LevelData[levelIndex]);
 	});
 
 	function loadLevel(nextIndex) {
 		window.glitchMode = "antifloor";
 		levelContainer.destroyLevelData();
-		levelCollisionController.destroyCollisionData();
 
 		var nextLevel = LevelData[nextIndex];
 		var maxDimension = getMaxDimension(nextLevel);
