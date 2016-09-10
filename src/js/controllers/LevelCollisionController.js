@@ -37,7 +37,7 @@ LevelCollisionController.prototype = {
 
 		for (c = 0; c < data[0].length; c++) {
 			for (r = 0; r < data.length; r++) {
-				currentCell = this.switchCellType(data[r][c]);
+				currentCell = data[r][c];
 				if (prevCell != undefined) {
 					if (prevCell != currentCell) {
 						if (currentCell !== 0) {
