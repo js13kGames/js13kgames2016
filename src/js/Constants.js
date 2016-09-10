@@ -29,12 +29,12 @@ var TILE_TYPES = [
 	{
 		name: "floor",
 		value: 3,
-		colour: "#fff"
+		colour: "rgb(122, 143, 164)"
 	},
 	{
 		name: "antifloor",
 		value: 4,
-		colour: "#fff"
+		colour: "rgb(22, 43, 54)"
 	},
 	{
 		name: "blocker",

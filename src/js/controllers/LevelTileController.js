@@ -1,5 +1,5 @@
-function LevelTileController(position, width, height, type, index) {
-	this.model = new LevelTileModel(position, width, height, type, index);
+function LevelTileController(position, width, height, type, index, startSize) {
+	this.model = new LevelTileModel(position, width, height, type, index, startSize);
 	this.view = new LevelTileView(this.model);
 	GameEvents.on("glitchModeChanged", this.onGlitchModeChanged, this);
 	GameEvents.on("update", this.update, this);
@@ -30,6 +30,12 @@ LevelTileController.prototype = {
 					this.view.resetGlitchDisplay();
 				}
 			}
+		}
+		if (this.model.type.name === "spawnPoint") {
+			this.model.relativeSize = (this.model.relativeSize + dt) % 1;
+		}
+		if (this.model.type.name === "exit") {
+			this.model.relativeSize = (1 + (this.model.relativeSize - dt)) % 1;
 		}
 	},
 	generateGlitchParameters: function() {

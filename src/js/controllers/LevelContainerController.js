@@ -16,7 +16,7 @@ LevelContainerController.prototype = {
 				var x = width * c;
 				var y = height * r;
 				var type = TILE_TYPES[columnValue];
-				var tile = new LevelTileController(new Vector2(x, y), width, height, type, 10 * r + c);
+				var tile = new LevelTileController(new Vector2(x, y), width, height, type, 10 * r + c, type.name === "spawnPoint" ? 0.5 : 1);
 
 				if (columnValue == 1) {
 					this.model.spawnPoint = tile;

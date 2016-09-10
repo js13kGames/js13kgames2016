@@ -1,9 +1,10 @@
-function LevelTileModel(position, width, height, type, index) {
+function LevelTileModel(position, width, height, type, index, startSize) {
 	this.position = position;
 	this.width = width;
 	this.height = height;
 	this.type = type;
 	this.index = index;
+	this.relativeSize = startSize;
 
 	this.bounds = {
 		top: this.position.y,

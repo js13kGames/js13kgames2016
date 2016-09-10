@@ -10,19 +10,29 @@ LevelTileView.prototype = {
 		if (layer === "level" && this.model.type.name === "blocker") return;
 		if (layer === "background" && this.model.type.name !== "blocker") return;
 
-
-		if (this.model.type.name === "floor" || this.model.type.name === "antifloor") {
-			if (this.model.isGlitching) {
-				ctx.globalCompositeOperation = "multiply";
-				this.drawRect("cyan", 0.1, this.glitchOffsets[0], this.model.isShowingGlitch);
-				this.drawRect("magenta", 0.1, this.glitchOffsets[1], this.model.isShowingGlitch);
-				this.drawRect("yellow", 0.1, this.glitchOffsets[2]), this.model.isShowingGlitch;
-				
-			} else {
-				this.drawRect("white", 1);
-			}
-		} else {
-			this.drawRect(this.model.type.colour, 1);
+		switch (this.model.type.name) {
+			case "floor":
+			case "antifloor":
+				if (this.model.isGlitching) {
+					ctx.globalCompositeOperation = "multiply";
+					this.drawRect("cyan", 0.1, this.glitchOffsets[0], this.model.isShowingGlitch);
+					this.drawRect("magenta", 0.1, this.glitchOffsets[1], this.model.isShowingGlitch);
+					this.drawRect("yellow", 0.1, this.glitchOffsets[2]), this.model.isShowingGlitch;
+				} else {
+					this.drawRect(this.model.type.colour, 1);
+				}
+			break;
+			case "spawnPoint":
+				var colour = Math.floor((255 * this.model.relativeSize)).toString(16);
+				this.drawRect("#" + colour + colour + colour, 1);
+			break;
+			case "exit":
+				var colour = Math.floor((255 * this.model.relativeSize)).toString(16);
+				this.drawRect("#" + colour + colour + colour, 1);
+			break;
+			default:
+				this.drawRect(this.model.type.colour, 1);
+			break;
 		}
 
 		if (window.drawDebug) {
@@ -65,10 +75,7 @@ LevelTileView.prototype = {
 		}
 		ctx.globalAlpha = alpha;
 		ctx.fillStyle = colour;
-		ctx.fillRect(scaledPosition.x, scaledPosition.y, scaledSize, scaledSize);
-
-		
-
+		ctx.fillRect(scaledPosition.x, scaledPosition.y, scaledSize * this.model.relativeSize, scaledSize * this.model.relativeSize);
 	},
 	destroy: function() {
 		GameEvents.off('draw', this.draw, this);
