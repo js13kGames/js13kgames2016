@@ -12,12 +12,7 @@ LevelTileView.prototype = {
 		var scaledPosition = this.model.position.scale(window.gameScale);
 
 		if (this.model.isGlitching) {
-			var glitchRoll = Math.random();
-			if (glitchRoll > 0.9) {
-				ctx.globalAlpha = Math.random();
-				glitchAmount = ((glitchRoll * 2) - 1) * 10;
-				scaledPosition.x += ((Math.random() * 10) - 5) * window.gameScale;
-			}
+			ctx.globalAlpha = 0.1;
 		} else {
 			ctx.globalAlpha = 1;
 		}
