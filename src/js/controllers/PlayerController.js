@@ -20,6 +20,13 @@ PlayerController.prototype = {
 		this.model.reset();
 		this.model.position = level.getSpawnPosition();
 		this.model.position = this.model.position.add(new Vector2(TILE_SIZE/2, TILE_SIZE/2));
+		this.newPosition = this.model.position.copy();
+
+		this.keysdown = {
+			left: false,
+			right: false,
+			up: false
+		};
 		this.model.levelStarted = true;
 	},
 	onKeyDown: function(e) {
@@ -77,67 +84,49 @@ PlayerController.prototype = {
 		}
 		this.model.velocity.x *= FRICTION;
 	},
-	checkFloor: function() {
-		var floorCheckA = this.model.position,
-			floorCheckB = this.model.position.add(new Vector2(0, 1));
-
-		if (!this.model.isStartingJump) {
-			GameEvents.emit("detectCollision", this, "level", floorCheckA, floorCheckB,
-				function onResult(data) {
-					var isOnFloor = false;
-					for(var i = 0; i < data.length; i++) {
-						var collisionData = data[i];
-						var isBlockerCollision = collisionData.collidee.getType() === "blocker";
-						var isUpCollider = collisionData.collidee.getDirection() === "up";
-						isOnFloor = isBlockerCollision && isUpCollider;
-						if (isOnFloor) {
-							break;
-						}
-					}
-					this.model.isOnFloor = isOnFloor;
-				}
-			);
-		}
-	},
 	adjustYVelocity: function() {
-		if (!this.model.isOnFloor) {
-			this.model.velocity.y += GRAVITY * this.lastFrameTime;
-		}
+		this.model.velocity.y += GRAVITY * this.lastFrameTime;
 	},
 	checkCollisions: function() {
-		var pointA = this.model.position,
-			pointB = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));
+		this.pointA = this.model.position;
+		this.pointB = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));
+		this.collisionCount = 0;
 
-		GameEvents.emit("detectCollision", this, "level", pointA, pointB, this.handleCollisionData);
+		GameEvents.emit("detectCollision", this, "level", this.pointA, this.pointB, this.handleCollisionData);
 	},
 	handleCollisionData: function(data) {
-		if (data.length > 0) {
-			for (var i = 0; i < data.length; i++) {
-				var collisionData = data[i];
-				var type = collisionData.collidee.getType();
-				switch (type) {
-					case "floor":
-						if (window.glitchMode === "antifloor") {
-							this.handleBlockerCollision(collisionData.collidee);
-						}
-					break;
-					case "antifloor":
-						if (window.glitchMode === "floor") {
-							this.handleBlockerCollision(collisionData.collidee);
-						}
-					break;
-					case "blocker":
-						this.handleBlockerCollision(collisionData.collidee);
-					break;
-					case "exit":
-						this.handleExitCollision();
-				}
+		for (var i = 0; i < data.length; i++) {
+			var collision = data[i];
+			var type = collision.collidee.getType();
+			switch (type) {
+				case "floor":
+					if (window.glitchMode === "antifloor") {
+						this.handleBlockerCollision(collision);
+					}
+				break;
+				case "antifloor":
+					if (window.glitchMode === "floor") {
+						this.handleBlockerCollision(collision);
+					}
+				break;
+				case "blocker":
+					this.handleBlockerCollision(collision);
+				break;
+				case "exit":
+					this.handleExitCollision();
+					return;
 			}
 		}
-		this.addVelocityToPosition();
+		this.model.position = this.newPosition.add(this.model.velocity.scale(this.lastFrameTime));
+		
 	},
-	handleBlockerCollision: function(blocker) {
+	handleBlockerCollision: function(collisionData) {
+		var blocker = collisionData.collidee;
 		var direction = blocker.getDirection();
+		var intersection = collisionData.intersectionResult.intersection;
+		this.newPosition = intersection.copy();
+		var delta = intersection.subtract(this.pointB);
+		var shouldRecheckCollisions = false;
 		switch (direction) {
 			case "up":
 				if (!this.model.isStartingJump) {
@@ -145,24 +134,36 @@ PlayerController.prototype = {
 						this.model.isOnFloor = true;
 						this.model.jumpCount = 0;
 						this.model.velocity.y = 0;
+						this.newPosition.y = this.pointB.y + delta.y - 0.1;
+						shouldRecheckCollisions = true;
 					}
 				}
 			break;
 			case "down":
 				if (this.model.velocity.y < 0) {
 					this.model.velocity.y = 0;
+					this.newPosition.y = this.pointB.y + delta.y + 0.1;
+					shouldRecheckCollisions = true;
 				}
 			break;
 			case "right":
 				if (this.model.velocity.x < 0) {
 					this.model.velocity.x = 0;
+					this.newPosition.x = this.pointB.x + delta.x + 0.1;
+					shouldRecheckCollisions = true;
 				}
 			break;
 			case "left":
 				if (this.model.velocity.x > 0) {
 					this.model.velocity.x = 0;
+					this.newPosition.x = this.pointB.x + delta.x - 0.1;
+					shouldRecheckCollisions = true;
 				}
 			break;
+		}
+		if (shouldRecheckCollisions) {
+			this.collisionCount++;
+			GameEvents.emit("detectCollision", this, "level", this.model.position, this.newPosition.add(this.model.velocity.scale(this.lastFrameTime)), this.handleCollisionData);
 		}
 	},
 	handleExitCollision: function() {
@@ -183,8 +184,9 @@ PlayerController.prototype = {
 		if (!this.model.levelStarted) return;
 		this.lastFrameTime = dt;
 
+		this.newPosition = this.model.position.copy();
+
 		this.adjustXVelocity();
-		this.checkFloor();
 		this.adjustYVelocity();
 		this.checkCollisions();
 		this.checkForFallenOutOfLevel();
