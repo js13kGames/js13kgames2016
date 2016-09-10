@@ -140,10 +140,12 @@ PlayerController.prototype = {
 				}
 			break;
 			case "down":
-				if (this.model.velocity.y < 0) {
-					this.model.velocity.y = 0;
-					this.newPosition.y = this.pointB.y + delta.y + 0.1;
-					shouldRecheckCollisions = true;
+				if (!this.model.isStartingJump) {
+					if (this.model.velocity.y < 0) {
+						this.model.velocity.y = 0;
+						this.newPosition.y = this.pointB.y + delta.y + 0.1;
+						shouldRecheckCollisions = true;
+					}
 				}
 			break;
 			case "right":
