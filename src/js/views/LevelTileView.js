@@ -13,10 +13,10 @@ LevelTileView.prototype = {
 
 		if (this.model.type.name === "floor" || this.model.type.name === "antifloor") {
 			if (this.model.isGlitching) {
-				ctx.globalCompositeOperation = "screen";
-				this.drawRect("cyan", 1/8, this.glitchOffsets[0], this.model.isShowingGlitch);
-				this.drawRect("magenta", 1/8, this.glitchOffsets[1], this.model.isShowingGlitch);
-				this.drawRect("yellow", 1/8, this.glitchOffsets[2]), this.model.isShowingGlitch;
+				ctx.globalCompositeOperation = "multiply";
+				this.drawRect("cyan", 0.1, this.glitchOffsets[0], this.model.isShowingGlitch);
+				this.drawRect("magenta", 0.1, this.glitchOffsets[1], this.model.isShowingGlitch);
+				this.drawRect("yellow", 0.1, this.glitchOffsets[2]), this.model.isShowingGlitch;
 				
 			} else {
 				this.drawRect("white", 1);
