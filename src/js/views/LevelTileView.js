@@ -36,6 +36,8 @@ LevelTileView.prototype = {
 		}
 
 		if (DRAW_DEBUG) {
+			var scaledPosition = this.model.position.scale(window.gameScale);
+
 			ctx.fillStyle = "white";
 			ctx.font = "12px sans-serif";
 			ctx.textAlign = "left";
