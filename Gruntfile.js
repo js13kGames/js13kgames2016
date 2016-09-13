@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     uglify: {
       all: {
-        src : 'src/**/*.js',
+        src : 'src/output.js',
         dest : 'build/output.min.js'
       }
     },
@@ -60,7 +60,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
 
   // Default task(s).
-  grunt.registerTask('default', ['less:development', 'watch:code']);
-  grunt.registerTask('production', ['uglify', 'less:production', 'cssmin']);
+  grunt.registerTask('default', ['less:development', 'concat', 'watch:code']);
+  grunt.registerTask('production', ['concat', 'uglify', 'less:production', 'cssmin']);
 
 };
