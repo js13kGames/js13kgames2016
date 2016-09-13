@@ -88,6 +88,14 @@ window.NewGame = function() {
 			ctx.fillText(titleText, canvas.width / 2, 60 * window.gameScale);
 		}
 
+		if (LevelData[levelIndex].showGameTitle) {
+			ctx.globalAlpha = 1;
+			ctx.fillStyle = "white";
+			ctx.font = (64 * window.gameScale) + "px monospace";
+			ctx.textAlign = "center";
+			ctx.fillText(GameTitle, canvas.width/2, canvas.height/2 - (TILE_SIZE / 4));
+		}
+
 	}
 
 	function getMaxDimension(level) {
