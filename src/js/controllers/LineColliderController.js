@@ -1,6 +1,5 @@
 function LineColliderController(a, b, type) {
-	this.colliderTypes = ["none", "spawnPoint", "exit", "floor", "antifloor", "blocker"];
-	this.model = new LineColliderModel(a, b, this.colliderTypes[type]);
+	this.model = new LineColliderModel(a, b, TILE_TYPES[type].name);
 	this.view = new LineColliderView(this.model);
 	GameEvents.emit('registerCollider', this, 'level');
 }

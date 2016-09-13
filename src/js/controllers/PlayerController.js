@@ -18,16 +18,29 @@ function PlayerController() {
 PlayerController.prototype = {
 	onLevelStarted: function(level) {
 		this.model.reset();
-		this.model.position = level.getSpawnPosition();
+		this.resetPosition(level.getSpawnPosition());
+		this.resetKeys();
+		this.model.levelStarted = true;
+	},
+	onDeath: function() {
+		this.model.reset();
+		GameEvents.emit("getActiveCheckpointPosition", this, function(pos) {
+			this.resetPosition(pos);
+		});
+		this.resetKeys();
+		this.model.levelStarted = true;
+	},
+	resetPosition: function(tilePos) {
+		this.model.position = tilePos;
 		this.model.position = this.model.position.add(new Vector2(TILE_SIZE/2, TILE_SIZE/2));
 		this.newPosition = this.model.position.copy();
-
+	},
+	resetKeys: function() {
 		this.keysdown = {
 			left: false,
 			right: false,
 			up: false
 		};
-		this.model.levelStarted = true;
 	},
 	onKeyDown: function(e) {
 		if (!this.model.levelStarted) return;
@@ -107,70 +120,88 @@ PlayerController.prototype = {
 	handleCollisionData: function(data) {
 		for (var i = 0; i < data.length; i++) {
 			var collision = data[i];
-			var type = collision.collidee.getType();
-			switch (type) {
-				case "floor":
-					if (window.glitchMode === "antifloor") {
-						this.handleBlockerCollision(collision);
+			var direction = collision.collidee.getDirection();
+			switch (direction) {
+				case "up":
+					if (!this.model.isStartingJump) {
+						if (this.model.velocity.y > 0) {
+							this.handleCollision(collision, direction);
+						}
 					}
 				break;
-				case "antifloor":
-					if (window.glitchMode === "floor") {
-						this.handleBlockerCollision(collision);
+				case "down":
+					if (!this.model.isStartingJump) {
+						if (this.model.velocity.y < 0) {
+							this.handleCollision(collision, direction);
+						}
 					}
 				break;
-				case "blocker":
-					this.handleBlockerCollision(collision);
+				case "right":
+					if (this.model.velocity.x < 0) {
+						this.handleCollision(collision, direction);
+					}
 				break;
-				case "exit":
-					this.handleExitCollision();
-					return;
+				case "left":
+					if (this.model.velocity.x > 0) {
+						this.handleCollision(collision, direction);
+					}
+				break;
 			}
 		}
 		this.model.position = this.newPosition.add(this.model.velocity.scale(this.lastFrameTime));
-		
 	},
-	handleBlockerCollision: function(collisionData) {
+	handleCollision:function(collision, direction) {
+		var type = collision.collidee.getType();
+		switch (type) {
+			case "floor":
+				if (window.glitchMode === "antifloor") {
+					this.handleBlockerCollision(collision, direction);
+				}
+			break;
+			case "antifloor":
+				if (window.glitchMode === "floor") {
+					this.handleBlockerCollision(collision, direction);
+				}
+			break;
+			case "blocker":
+				this.handleBlockerCollision(collision, direction);
+			break;
+			case "exit":
+				this.handleExitCollision();
+				return;
+			case "checkpoint":
+				this.handleCheckpointCollision(collision);
+			break;
+		}
+	},
+	handleBlockerCollision: function(collisionData, direction) {
 		var blocker = collisionData.collidee;
-		var direction = blocker.getDirection();
 		var intersection = collisionData.intersectionResult.intersection;
 		this.newPosition = intersection.copy();
 		var delta = intersection.subtract(this.pointB);
 		var shouldRecheckCollisions = false;
 		switch (direction) {
 			case "up":
-				if (!this.model.isStartingJump) {
-					if (this.model.velocity.y > 0) {
-						this.model.isOnFloor = true;
-						this.model.jumpCount = 0;
-						this.model.velocity.y = 0;
-						this.newPosition.y = this.pointB.y + delta.y - 0.1;
-						shouldRecheckCollisions = true;
-					}
-				}
+				this.model.isOnFloor = true;
+				this.model.jumpCount = 0;
+				this.model.velocity.y = 0;
+				this.newPosition.y = this.pointB.y + delta.y - 0.1;
+				shouldRecheckCollisions = true;
 			break;
 			case "down":
-				if (!this.model.isStartingJump) {
-					if (this.model.velocity.y < 0) {
-						this.model.velocity.y = 0;
-						this.newPosition.y = this.pointB.y + delta.y + 0.1;
-						shouldRecheckCollisions = true;
-					}
-				}
+				this.model.velocity.y = 0;
+				this.newPosition.y = this.pointB.y + delta.y + 0.1;
+				shouldRecheckCollisions = true;
 			break;
 			case "right":
-				if (this.model.velocity.x < 0) {
-					this.model.velocity.x = 0;
-					this.newPosition.x = this.pointB.x + delta.x + 0.1;
-					shouldRecheckCollisions = true;
-				}
+				this.model.velocity.x = 0;
+				this.newPosition.x = this.pointB.x + delta.x + 0.1;
+				shouldRecheckCollisions = true;
 			break;
 			case "left":
-				if (this.model.velocity.x > 0) {
-					this.model.velocity.x = 0;
-					this.newPosition.x = this.pointB.x + delta.x - 0.1;
-					shouldRecheckCollisions = true;
-				}
+				this.model.velocity.x = 0;
+				this.newPosition.x = this.pointB.x + delta.x - 0.1;
+				shouldRecheckCollisions = true;
 			break;
 		}
 		if (shouldRecheckCollisions) {
@@ -180,6 +211,9 @@ PlayerController.prototype = {
 	},
 	handleExitCollision: function() {
 		GameEvents.emit("exitReached");
+	},
+	handleCheckpointCollision: function(collision) {
+		GameEvents.emit("findAndActivateCheckpoint", collision.intersectionResult.intersection);
 	},
 	addVelocityToPosition: function() {
 		this.model.position = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));

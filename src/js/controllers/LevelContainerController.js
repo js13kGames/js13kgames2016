@@ -1,9 +1,13 @@
 function LevelContainerController() {
 	this.model = new LevelContainerModel();
 	this.view = new LevelContainerView(this.model);
+	GameEvents.on("activateCheckpoint", this.onActivateCheckpoint, this);
 }
 
 LevelContainerController.prototype = {
+	onActivateCheckpoint: function(checkpoint) {
+		this.model.activeCheckpoint = checkpoint;
+	},
 	generateLevelData: function(data) {
 		for (var r = 0; r < data.length; r++) {
 			var row = data[r];

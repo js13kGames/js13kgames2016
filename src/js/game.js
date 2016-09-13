@@ -36,7 +36,11 @@ window.NewGame = function() {
 	});
 
 	GameEvents.on("playerDied", function() {
-		loadLevel(levelIndex);
+		if (levelContainer.model.activeCheckpoint) {
+			player.onDeath();
+		} else {
+			loadLevel(levelIndex);
+		}
 	});
 
 	GameEvents.on("glitchModeChanged", function(glitchMode) {

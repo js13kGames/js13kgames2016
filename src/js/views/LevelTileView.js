@@ -35,6 +35,10 @@ LevelTileView.prototype = {
 				var colour = Math.floor((255 * this.model.relativeSize)).toString(16);
 				this.drawRect("#" + colour + colour + colour, 1);
 			break;
+			case "checkpoint":
+				var colour = this.model.isCheckpointActive ? "white" : this.model.type.colour;
+				this.drawRect(colour, 1);
+			break;
 			default:
 				this.drawRect(this.model.type.colour, 1);
 			break;

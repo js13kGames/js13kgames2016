@@ -3,6 +3,8 @@ function LevelTileController(position, width, height, type, index, startSize) {
 	this.view = new LevelTileView(this.model);
 	GameEvents.on("glitchModeChanged", this.onGlitchModeChanged, this);
 	GameEvents.on("checkForInsideNewGlitcher", this.onInsideNewGlitcherCheck, this);
+	GameEvents.on("findAndActivateCheckpoint", this.onFindAndActivateCheckpoint, this);
+	GameEvents.on("getActiveCheckpointPosition", this.onGetActiveCheckpointPosition, this);
 	GameEvents.on("update", this.update, this);
 	this.onGlitchModeChanged(window.glitchMode);
 }
@@ -39,6 +41,21 @@ LevelTileController.prototype = {
 			this.model.relativeSize = (1 + (this.model.relativeSize - dt)) % 1;
 		}
 	},
+	onFindAndActivateCheckpoint: function(position) {
+		if (this.model.type.name === "checkpoint") {
+			if (this.checkPositionIsInside(position)) {
+				GameEvents.emit("activateCheckpoint", this);
+				this.model.isCheckpointActive = true;
+			} else {
+				this.model.isCheckpointActive = false;
+			}
+		}
+	},
+	onGetActiveCheckpointPosition: function(player, callback) {
+		if (this.model.isCheckpointActive) {
+			callback.call(player, this.model.position);
+		}
+	},
 	generateGlitchParameters: function() {
 		this.model.glitchTime = Math.random() * 2000;
 		this.model.canvasGrabSize = this.generateRandomSizeVector();
@@ -52,18 +69,22 @@ LevelTileController.prototype = {
 		);
 	},
 	onInsideNewGlitcherCheck: function(player, callback) {
-		if (this.model.type.name === "spawnPoint" || this.model.type.name === "exit") return;
-		var playerPos = player.model.position;
-		var myPos = this.model.position;
-		if (playerPos.x > myPos.x && playerPos.x <= myPos.x + TILE_SIZE
-				&& playerPos.y > myPos.y && playerPos.y <= myPos.y + TILE_SIZE) {
+		if (this.model.type.name !== "floor" && this.model.type.name !== "antifloor") return;
+		if (this.checkPositionIsInside(player.model.position)) {
 			callback.call(player, true);
 		}
+	},
+	checkPositionIsInside: function(pos) {
+		var myPos = this.model.position;
+		return pos.x >= myPos.x && pos.x <= myPos.x + TILE_SIZE
+			&& pos.y >= myPos.y && pos.y <= myPos.y + TILE_SIZE;
 	},
 	destroy: function() {
 		this.view.destroy();
 		GameEvents.off("glitchModeChanged", this.onGlitchModeChanged, this);
 		GameEvents.off("checkForInsideNewGlitcher", this.onInsideNewGlitcherCheck, this);
+		GameEvents.off("findAndActivateCheckpoint", this.onFindAndActivateCheckpoint, this);
+		GameEvents.off("getActiveCheckpointPosition", this.onFindAndActivateCheckpoint, this);
 		GameEvents.off("update", this.update, this);
 	}
 }

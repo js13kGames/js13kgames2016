@@ -26,13 +26,11 @@ var TILE_TYPES = [
 	},
 	{
 		name: "spawnPoint",
-		value: 1,
-		colour: "rgb(155, 89, 182)"
+		value: 1
 	},
 	{
 		name: "exit",
-		value: 2,
-		colour: "rgb(44, 62, 80)"
+		value: 2
 	},
 	{
 		name: "floor",
@@ -48,6 +46,11 @@ var TILE_TYPES = [
 		name: "blocker",
 		value: 5,
 		colour: "rgb(52, 73, 94)"
+	},
+	{
+		name: "checkpoint",
+		value: 6,
+		colour: "rgb(80, 80, 80)"
 	}
 ];
 
