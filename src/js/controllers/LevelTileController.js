@@ -2,6 +2,7 @@ function LevelTileController(position, width, height, type, index, startSize) {
 	this.model = new LevelTileModel(position, width, height, type, index, startSize);
 	this.view = new LevelTileView(this.model);
 	GameEvents.on("glitchModeChanged", this.onGlitchModeChanged, this);
+	GameEvents.on("checkForInsideNewGlitcher", this.onInsideNewGlitcherCheck, this);
 	GameEvents.on("update", this.update, this);
 	this.onGlitchModeChanged(window.glitchMode);
 }
@@ -50,9 +51,19 @@ LevelTileController.prototype = {
 			((Math.random() * TILE_SIZE) - TILE_SIZE/2) * window.gameScale
 		);
 	},
+	onInsideNewGlitcherCheck: function(player, callback) {
+		if (this.model.type.name === "spawnPoint" || this.model.type.name === "exit") return;
+		var playerPos = player.model.position;
+		var myPos = this.model.position;
+		if (playerPos.x > myPos.x && playerPos.x <= myPos.x + TILE_SIZE
+				&& playerPos.y > myPos.y && playerPos.y <= myPos.y + TILE_SIZE) {
+			callback.call(player, true);
+		}
+	},
 	destroy: function() {
 		this.view.destroy();
 		GameEvents.off("glitchModeChanged", this.onGlitchModeChanged, this);
+		GameEvents.off("checkForInsideNewGlitcher", this.onInsideNewGlitcherCheck, this);
 		GameEvents.off("update", this.update, this);
 	}
 }

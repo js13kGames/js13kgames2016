@@ -66,6 +66,11 @@ PlayerController.prototype = {
 		if (this.keysdown.right && !this.keysdown.left) {
 			if (window.glitchMode === "floor") {
 				GameEvents.emit("glitchModeChanged", "antifloor");
+				GameEvents.emit("checkForInsideNewGlitcher", this, function handleInsideCheck(isInside) {
+					if (isInside) {
+						this.die();
+					}
+				});
 			}
 			if (this.model.velocity.x < 0) {
 				this.model.velocity.x = 0;
@@ -75,6 +80,11 @@ PlayerController.prototype = {
 		} else if (this.keysdown.left && !this.keysdown.right) {
 			if (window.glitchMode === "antifloor") {
 				GameEvents.emit("glitchModeChanged", "floor");
+				GameEvents.emit("checkForInsideNewGlitcher", this, function handleInsideCheck(isInside) {
+					if (isInside) {
+						this.die();
+					}
+				});
 			}
 			if (this.model.velocity.x > 0) {
 				this.model.velocity.x = 0;
@@ -176,27 +186,51 @@ PlayerController.prototype = {
 	},
 	checkForFallenOutOfLevel: function() {
 		if (this.model.position.y * window.gameScale > canvas.height) {
-			GameEvents.emit("playerDied");
+			this.die();
 		}
 	},
 	setDebugDrawPoints: function() {
 		this.model.debugDrawPoints = [this.model.position, this.model.position.add(this.model.velocity.scale(this.lastFrameTime))];
 	},
+	die: function() {
+		this.model.isDead = true;
+		this.model.deathShards = [];
+		for (var i = 0; i < DEATH_SHARD_COUNT; i++) {
+			this.model.deathShards.push({
+				pos: this.model.position.copy(),
+				vel: new Vector2((Math.random() * DEATH_SHARD_MAX_VELOCITY_X) - DEATH_SHARD_MAX_VELOCITY_X / 2, (1 - Math.random() * DEATH_SHARD_MAX_VELOCITY_Y)),
+				size: Math.random() * DEATH_SHARD_MAX_SIZE
+			});
+		}
+		this.deathTime = Date.now();
+	},
 	update: function(dt) {
 		if (!this.model.levelStarted) return;
 		this.lastFrameTime = dt;
 
-		this.newPosition = this.model.position.copy();
+		if (this.model.isDead) {
+			if (Date.now() - this.deathTime > DEATH_TIMING) {
+				GameEvents.emit("playerDied");
+				return;
+			} else {
+				for (var i = 0; i < this.model.deathShards.length; i++) {
+					var shard = this.model.deathShards[i];
+					shard.vel.y += GRAVITY * this.lastFrameTime;
+					shard.pos = shard.pos.add(shard.vel.scale(this.lastFrameTime));
+				}
+			}
+		} else {
+			this.newPosition = this.model.position.copy();
 
-		this.adjustXVelocity();
-		this.adjustYVelocity();
-		this.checkCollisions();
-		this.checkForFallenOutOfLevel();
-		if (DRAW_DEBUG) {
-			this.setDebugDrawPoints();
+			this.adjustXVelocity();
+			this.adjustYVelocity();
+			this.checkCollisions();
+			this.checkForFallenOutOfLevel();
+			if (DRAW_DEBUG) {
+				this.setDebugDrawPoints();
+			}
+
+			this.model.isStartingJump = false;
 		}
-
-		this.model.isStartingJump = false;
-
 	}
 }

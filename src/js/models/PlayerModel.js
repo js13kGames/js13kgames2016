@@ -11,5 +11,6 @@ PlayerModel.prototype = {
 		this.velocity = new Vector2(500, 0);
 		this.position = new Vector2(0, 0);
 		this.jumpCount = MAX_JUMPS;
+		this.isDead = false;
 	}
 }
