@@ -6,7 +6,7 @@ function LineColliderModel(a, b, type) {
 }
 
 LineColliderModel.prototype = {
-	checkIntersection(otherA, otherB) {
+	checkIntersection: function(otherA, otherB) {
 		var deltaA = this.a.subtract(otherA);
 		var thisLine = this.b.subtract(this.a);
 		var otherLine = otherB.subtract(otherA);

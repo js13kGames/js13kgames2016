@@ -26,7 +26,7 @@ var CollisionHandler = {
 			}
 		}
 	},
-	getCollision(collider, layer, pointA, pointB, callback) {
+	getCollision: function(collider, layer, pointA, pointB, callback) {
 		var collisionLayer = this.collisionLayers[layer];
 		var collisions = [];
 
