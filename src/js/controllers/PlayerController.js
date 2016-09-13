@@ -109,6 +109,7 @@ PlayerController.prototype = {
 	},
 	adjustYVelocity: function() {
 		this.model.velocity.y += GRAVITY * this.lastFrameTime;
+		this.model.velocity.y = Math.min(this.model.velocity.y, TERMINAL_VELOCITY);
 	},
 	checkCollisions: function() {
 		this.pointA = this.model.position;
