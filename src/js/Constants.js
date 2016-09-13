@@ -51,6 +51,11 @@ var TILE_TYPES = [
 		name: "checkpoint",
 		value: 6,
 		colour: "rgb(80, 80, 80)"
+	},
+	{
+		name: "deathtile",
+		value: 7,
+		colour: "rgb(204, 80, 80)"
 	}
 ];
 

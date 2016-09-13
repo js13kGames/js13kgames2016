@@ -10,7 +10,8 @@ LevelContainerModel.prototype = {
 		this.antifloors = [];
 		this.blockers = [];
 		this.checkpoints = [];
-		this.levelObjects = [];
 		this.activeCheckpoint = null;
+		this.deathtiles = [];
+		this.levelObjects = [];
 	}
 }

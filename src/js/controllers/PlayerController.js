@@ -172,6 +172,9 @@ PlayerController.prototype = {
 			case "checkpoint":
 				this.handleCheckpointCollision(collision);
 			break;
+			case "deathtile":
+				this.handleDeathtileCollision();
+			break;
 		}
 	},
 	handleBlockerCollision: function(collisionData, direction) {
@@ -214,6 +217,9 @@ PlayerController.prototype = {
 	},
 	handleCheckpointCollision: function(collision) {
 		GameEvents.emit("findAndActivateCheckpoint", collision.intersectionResult.intersection);
+	},
+	handleDeathtileCollision: function() {
+		this.die();
 	},
 	addVelocityToPosition: function() {
 		this.model.position = this.model.position.add(this.model.velocity.scale(this.lastFrameTime));
