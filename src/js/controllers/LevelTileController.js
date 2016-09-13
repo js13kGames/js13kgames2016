@@ -16,7 +16,7 @@ LevelTileController.prototype = {
 	update: function(dt) {
 		if (this.model.isGlitching) {
 			if (!this.model.isShowingGlitch) {
-				if (Math.random() > 0.99) {
+				if (Math.random() > 0.9) {
 					this.model.isShowingGlitch = true;
 					this.model.glitchStartTime = Date.now();
 					this.generateGlitchParameters();
